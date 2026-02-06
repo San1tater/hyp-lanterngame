@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>元宵節猜燈謎 - Lantern Festival Riddle Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            min-height: 100vh;
+            min-width: 100vw;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4500 100%);
+            background-image: url('images/background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* 屏幕方向提示 */
+        #orientation-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        #orientation-message i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+        
+        #orientation-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+        
+        #orientation-message p {
+            font-size: 1.5rem;
+            max-width: 600px;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        /* 标题样式 */
+        header {
+            text-align: center;
+            padding: 5px 0;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 2.8rem;
+            color: #ffd700;
+            text-shadow: 3px 3px 0 #8b0000, 6px 6px 10px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(139, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 2px solid #ffd700;
+            line-height: 1.2;
+        }
+
+        /* 游戏区域 */
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+            border: 5px solid #ffd700;
+            overflow: hidden;
+        }
+
+        /* 语言选择界面 */
+        .language-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .language-selection h2 {
+            font-size: 2rem;
+            color: #8b0000;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .language-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 60%;
+        }
+
+        .language-btn {
+            width: 45%;
+            height: 100%;
+            max-height: 300px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 4px solid transparent;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .language-btn.chinese {
+            background: linear-gradient(135deg, #ff0000, #ff4500);
+            color: white;
+        }
+
+        .language-btn.english {
+            background: linear-gradient(135deg, #00509e, #1e90ff);
+            color: white;
+        }
+
+        .language-btn i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* 游戏进行界面 */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #8b0000;
+            flex-shrink: 0;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.9rem;
+            flex-grow: 1;
+        }
+
+        .stat-item {
+            background-color: #8b0000;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            flex: 1;
+            text-align: center;
+            min-width: 0;
+        }
+
+        .stat-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .restart-btn {
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        .progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4500, #ffd700);
+            width: 33.33%;
+            transition: width 0.5s ease;
+        }
+
+        /* 谜题区域 */
+        .riddle-container {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff8e1;
+            border-radius: 10px;
+            border: 2px solid #ffd700;
+            box-shadow: inset 0 0 10px rgba(255, 69, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .riddle-title {
+            font-size: 1.2rem;
+            color: #8b0000;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .riddle-text {
+            font-size: 1.8rem;
+            line-height: 1.3;
+            color: #333;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            min-height: 80px;
+        }
+
+        /* 选项区域 */
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .option-btn {
+            padding: 15px 10px;
+            font-size: 1.3rem;
+            background-color: #f8f8f8;
+            border: 3px solid #8b0000;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: break-word;
+            overflow: hidden;
+        }
+
+        .option-btn:hover {
+            background-color: #ffe4b5;
+            transform: translateY(-3px);
+        }
+
+        .option-btn.correct {
+            background-color: #32cd32 !important;
+            color: white;
+            border-color: #228b22;
+        }
+
+        .option-btn.wrong {
+            background-color: #ff4444 !important;
+            color: white;
+            border-color: #cc0000;
+        }
+
+        .option-btn.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* 按钮区域 */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: #8b0000;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff4500;
+            transform: scale(1.03);
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ddd;
+        }
+
+        /* 胜利视频 */
+        #victory-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1000;
+            display: none;
+        }
+
+        /* 提交表单 */
+        .submit-form {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .submit-form h2 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            border-color: #8b0000;
+            outline: none;
+        }
+
+        .score-display {
+            font-size: 2rem;
+            color: #8b0000;
+            font-weight: bold;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        /* 排行榜前三名区域 */
+        .top-three {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .top-three h3 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .top-three-list {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .top-three-item {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 15px 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            min-width: 0;
+        }
+
+        .top-three-item.rank-1 {
+            border-color: #ffd700;
+            order: 2;
+            transform: scale(1.05);
+        }
+
+        .top-three-item.rank-2 {
+            border-color: #c0c0c0;
+            order: 1;
+        }
+
+        .top-three-item.rank-3 {
+            border-color: #cd7f32;
+            order: 3;
+        }
+
+        .rank-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .rank-1 .rank-icon {
+            color: #ffd700;
+        }
+
+        .rank-2 .rank-icon {
+            color: #c0c0c0;
+        }
+
+        .rank-3 .rank-icon {
+            color: #cd7f32;
+        }
+
+        .top-three-item .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .top-three-item .class-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #8b0000;
+            margin-bottom: 5px;
+        }
+
+        .top-three-item .score {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .no-data {
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* 排行榜 */
+        .leaderboard {
+            display: none;
+            background-color: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .leaderboard h2 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .leaderboard-table th {
+            background-color: #8b0000;
+            color: white;
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #fff8e1;
+        }
+
+        .rank-1, .rank-2, .rank-3 {
+            font-weight: bold;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            color: white;
+            padding: 5px 0;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            opacity: 0.9;
+            flex-shrink: 0;
+        }
+
+        /* 转换工具 */
+        .converter {
+            display: none;
+            background-color: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .converter h2 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .converter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-input {
+            flex-grow: 1;
+        }
+
+        .converter-result {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .converter-result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+
+        /* 加载状态 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #8b0000;
+        }
+
+        /* 横屏专用样式 */
+        @media screen and (orientation: portrait) {
+            #orientation-message {
+                display: flex;
+            }
+            
+            .container {
+                display: none;
+            }
+        }
+
+        @media screen and (orientation: landscape) and (max-height: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+            
+            .language-selection h2 {
+                font-size: 1.5rem;
+            }
+            
+            .language-btn {
+                font-size: 1.5rem;
+            }
+            
+            .language-btn i {
+                font-size: 2.5rem;
+            }
+            
+            .riddle-text {
+                font-size: 1.5rem;
+            }
+            
+            .option-btn {
+                font-size: 1.1rem;
+                padding: 10px 5px;
+            }
+            
+            .stat-item .value {
+                font-size: 1.2rem;
+            }
+            
+            .top-three-list {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .top-three-item {
+                width: 80%;
+            }
+        }
+
+        @media screen and (min-width: 1200px) and (min-height: 700px) {
+            .container {
+                max-width: 1200px;
+                max-height: 800px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .game-container {
+                padding: 20px;
+            }
+            
+            .riddle-text {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 屏幕方向提示 -->
+    <div id="orientation-message">
+        <i class="fas fa-sync-alt fa-spin"></i>
+        <h2>請旋轉設備</h2>
+        <p>元宵節猜燈謎遊戲需要在橫屏模式下遊玩<br>請將設備旋轉至橫向模式</p>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-lantern"></i> 元宵節猜燈謎</h1>
+            <div class="subtitle">Lantern Festival Riddle Game</div>
+        </header>
+
+        <!-- 游戏主容器 -->
+        <main class="game-container" id="game-container">
+            <!-- 语言选择界面 -->
+            <div class="language-selection" id="language-selection">
+                <h2>請選擇遊戲語言 / Please Select Game Language</h2>
+                <div class="language-options">
+                    <div class="language-btn chinese" onclick="selectLanguage('chinese')">
+                        <i class="fas fa-dragon"></i>
+                        <span>中文燈謎</span>
+                    </div>
+                    <div class="language-btn english" onclick="selectLanguage('english')">
+                        <i class="fas fa-globe"></i>
+                        <span>English Riddles</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 游戏进行界面 -->
+            <div id="game-screen">
+                <div class="game-header">
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div>用時</div>
+                            <div class="value" id="time-used">0</div>
+                            <div>秒</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>分數倍率</div>
+                            <div class="value" id="score-multiplier">100%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>題目進度</div>
+                            <div class="value" id="progress-text">1/3</div>
+                        </div>
+                    </div>
+                    <div class="restart-btn">
+                        <button class="btn btn-secondary" onclick="restartGame()">
+                            <i class="fas fa-redo"></i> 重來
+                        </button>
+                    </div>
+                </div>
+
+                <div class="progress">
+                    <span>答題進度:</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="riddle-container">
+                    <div class="riddle-title" id="riddle-title">燈謎 #1</div>
+                    <div class="riddle-text" id="riddle-text">這裡顯示燈謎內容</div>
+                </div>
+
+                <div class="options-container" id="options-container">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 提交表单 -->
+            <div class="submit-form" id="submit-form">
+                <h2><i class="fas fa-trophy"></i> 挑戰完成！</h2>
+                <div class="score-display" id="final-score">30 分</div>
+                
+                <!-- 排行榜前三名区域 -->
+                <div class="top-three" id="top-three">
+                    <h3>🏆 排行榜前三名 🏆</h3>
+                    <div class="loading" id="top-three-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>正在加載排行榜數據...</p>
+                    </div>
+                    <div class="top-three-list" id="top-three-list">
+                        <!-- 前三名将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <p>請輸入您的班別和學號以登上排行榜</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="class-select">班別 Class</label>
+                        <select id="class-select">
+                            <option value="">請選擇班別</option>
+                            <!-- 生成1A到6E选项 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-id">學號 Student ID (1-30)</label>
+                        <input type="number" id="student-id" min="1" max="30" placeholder="輸入學號">
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn btn-primary" onclick="submitScore()">
+                        <i class="fas fa-upload"></i> 提交分數
+                    </button>
+                    <button class="btn btn-secondary" onclick="playAgain()">
+                        <i class="fas fa-play"></i> 再玩一次
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 排行榜 -->
+        <div class="leaderboard" id="leaderboard">
+            <h2><i class="fas fa-crown"></i> 排行榜 Leaderboard</h2>
+            <div class="loading" id="leaderboard-loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>正在加載排行榜數據...</p>
+            </div>
+            <table class="leaderboard-table" id="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>班別</th>
+                        <th>學號</th>
+                        <th>分數</th>
+                        <th>用時</th>
+                        <th>倍率</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <!-- 排行榜数据将通过JavaScript动态生成 -->
+                </tbody>
+            </table>
+            <div class="button-container" style="margin-top: 15px;">
+                <button class="btn btn-primary" onclick="showGameSelection()">
+                    <i class="fas fa-home"></i> 返回主選單
+                </button>
+                <button class="btn btn-secondary" onclick="toggleLeaderboard()">
+                    <i class="fas fa-times"></i> 關閉排行榜
+                </button>
+            </div>
+        </div>
+
+        <!-- Excel转JSON转换工具 -->
+        <div class="converter" id="converter">
+            <h2><i class="fas fa-file-excel"></i> Excel 轉 JSON 轉換工具</h2>
+            <p>使用此工具將 Excel 文件 (.xlsx) 轉換為遊戲可讀的 JSON 格式。</p>
+            <p>Excel 文件必須包含以下列：謎面、正確答案、干擾項1、干擾項2、干擾項3</p>
+            
+            <div class="converter-controls">
+                <div class="file-input">
+                    <label for="excel-file">選擇 Excel 文件：</label>
+                    <input type="file" id="excel-file" accept=".xlsx">
+                </div>
+                <div>
+                    <label for="language-type">語言類型：</label>
+                    <select id="language-type">
+                        <option value="chinese">中文</option>
+                        <option value="english">英文</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="convertExcel()">
+                    <i class="fas fa-exchange-alt"></i> 轉換為 JSON
+                </button>
+            </div>
+            
+            <div class="converter-result" id="converter-result">
+                <h3>轉換結果：</h3>
+                <pre id="json-output"></pre>
+                <button class="btn btn-primary" onclick="downloadJSON()">
+                    <i class="fas fa-download"></i> 下載 JSON 文件
+                </button>
+            </div>
+        </div>
+
+        <!-- 胜利视频 -->
+        <video id="victory-video" preload="auto" loop>
+            <source src="images/victory.mp4" type="video/mp4">
+            您的瀏覽器不支援視頻播放。
+        </video>
+
+        <!-- 页脚 -->
+        <footer>
+            <p style="margin-top: 5px;">
+                <button class="btn btn-secondary" onclick="toggleConverter()" style="padding: 5px 10px; font-size: 0.7rem;">
+                    <i class="fas fa-tools"></i> 打開轉換工具
+                </button>
+                <button class="btn btn-secondary" onclick="toggleLeaderboard()" style="padding: 5px 10px; font-size: 0.7rem;">
+                    <i class="fas fa-crown"></i> 查看排行榜
+                </button>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkopSXKNpvKAyhlxaAUot2xQRlZTsnBCQ",
+            authDomain: "hyp-lanterngame.firebaseapp.com",
+            databaseURL: "https://hyp-lanterngame-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "hyp-lanterngame",
+            storageBucket: "hyp-lanterngame.firebasestorage.app",
+            messagingSenderId: "1018393426134",
+            appId: "1:1018393426134:web:3cde75105b7809f949b177"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        // 导出到全局作用域供其他函数使用
+        window.firebaseDatabase = database;
+        window.firebaseRef = ref;
+        window.firebasePush = push;
+        window.firebaseSet = set;
+        window.firebaseOnValue = onValue;
+        window.firebaseQuery = query;
+        window.firebaseOrderByChild = orderByChild;
+        window.firebaseLimitToLast = limitToLast;
+        
+        console.log("Firebase 初始化完成");
+    </script>
+    
+    <!-- SheetJS 用于Excel转换 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        // 游戏全局变量
+        let gameState = {
+            language: 'chinese',
+            riddles: [],
+            currentRiddleIndex: 0,
+            timeUsed: 0,
+            startTime: 0,
+            timer: null,
+            answered: false,
+            gameCompleted: false
+        };
+
+        // Firebase数据库引用
+        let leaderboardRef = null;
+        let topScoresRef = null;
+
+        // 默认灯谜库（空数组，将从JSON文件加载）
+        const defaultRiddles = {
+            chinese: [],
+            english: []
+        };
+
+        // 屏幕方向检测
+        function checkOrientation() {
+            const orientationMessage = document.getElementById('orientation-message');
+            const container = document.querySelector('.container');
+            
+            if (window.innerWidth > window.innerHeight) {
+                // 横屏模式
+                orientationMessage.style.display = 'none';
+                container.style.display = 'flex';
+            } else {
+                // 竖屏模式
+                orientationMessage.style.display = 'flex';
+                container.style.display = 'none';
+            }
+        }
+
+        // 初始化游戏
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查屏幕方向
+            checkOrientation();
+            window.addEventListener('resize', checkOrientation);
+            window.addEventListener('orientationchange', checkOrientation);
+            
+            // 生成班别选项
+            generateClassOptions();
+            
+            // 初始化Firebase引用
+            if (window.firebaseRef) {
+                leaderboardRef = window.firebaseRef(window.firebaseDatabase, 'leaderboard');
+                topScoresRef = window.firebaseRef(window.firebaseDatabase, 'topScores');
+                console.log("Firebase 引用已初始化");
+            } else {
+                console.error("Firebase 未正确初始化");
+            }
+            
+            // 显示语言选择界面
+            showLanguageSelection();
+            
+            // 尝试加载背景图片，失败时使用默认背景
+            const bgImage = new Image();
+            bgImage.onload = function() {
+                console.log('背景圖片加載成功');
+            };
+            bgImage.onerror = function() {
+                console.log('背景圖片加載失敗，使用默認背景');
+                document.body.style.backgroundImage = 'none';
+            };
+            bgImage.src = 'images/background.png';
+        });
+
+        // 生成班别选项 (1A-6E)
+        function generateClassOptions() {
+            const classSelect = document.getElementById('class-select');
+            const grades = ['1', '2', '3', '4', '5', '6'];
+            const classes = ['A', 'B', 'C', 'D', 'E'];
+            
+            classSelect.innerHTML = '<option value="">請選擇班別</option>';
+            
+            grades.forEach(grade => {
+                classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = `${grade}${cls}`;
+                    option.textContent = `${grade}${cls}`;
+                    classSelect.appendChild(option);
+                });
+            });
+        }
+
+        // 选择语言
+        function selectLanguage(lang) {
+            gameState.language = lang;
+            
+            // 尝试加载对应的灯谜库
+            loadRiddles(lang);
+            
+            // 更新UI文本
+            updateUITextForLanguage(lang);
+            
+            // 显示游戏界面
+            showGameScreen();
+        }
+
+        // 根据语言更新UI文本
+        function updateUITextForLanguage(lang) {
+            const elements = {
+                'chinese': {
+                    'riddle-title': '燈謎 #',
+                    'time-label': '用時',
+                    'multiplier-label': '分數倍率',
+                    'progress-label': '題目進度'
+                },
+                'english': {
+                    'riddle-title': 'Riddle #',
+                    'time-label': 'Time Used',
+                    'multiplier-label': 'Score Multiplier',
+                    'progress-label': 'Progress'
+                }
+            };
+            
+            const texts = elements[lang];
+            document.getElementById('riddle-title').textContent = texts['riddle-title'] + '1';
+            
+            // 更新统计标签
+            const statItems = document.querySelectorAll('.stat-item');
+            statItems[0].querySelector('div:first-child').textContent = texts['time-label'];
+            statItems[1].querySelector('div:first-child').textContent = texts['multiplier-label'];
+            statItems[2].querySelector('div:first-child').textContent = texts['progress-label'];
+        }
+
+        // 加载灯谜库
+        function loadRiddles(lang) {
+            // 尝试从本地存储加载
+            const storedRiddles = localStorage.getItem(`riddles_${lang}`);
+            
+            if (storedRiddles) {
+                gameState.riddles = JSON.parse(storedRiddles);
+                console.log(`已從本地存儲加載 ${gameState.riddles.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
+            } else {
+                // 如果本地存储中没有，尝试从文件加载
+                fetchRiddlesFromFile(lang);
+            }
+        }
+
+        // 从文件加载灯谜库
+        function fetchRiddlesFromFile(lang) {
+            const filename = lang === 'chinese' ? 'docx/chi.json' : 'docx/eng.json';
+            
+            fetch(filename)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`無法加載 ${filename}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    gameState.riddles = data;
+                    console.log(`已從文件加載 ${gameState.riddles.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
+                    
+                    // 保存到本地存储
+                    localStorage.setItem(`riddles_${lang}`, JSON.stringify(data));
+                    
+                    // 如果游戏已经开始，需要重新开始
+                    if (gameState.startTime > 0) {
+                        resetGame();
+                        startGame();
+                    }
+                })
+                .catch(error => {
+                    console.error(`加載燈謎庫失敗: ${error.message}`);
+                    
+                    // 使用默认灯谜库（空）
+                    gameState.riddles = defaultRiddles[lang];
+                    
+                    // 如果默认灯谜库为空，显示提示
+                    if (gameState.riddles.length === 0) {
+                        alert(`找不到${lang==='chinese'?'中文':'英文'}燈謎庫，請使用轉換工具導入題目。`);
+                        toggleConverter();
+                        return;
+                    }
+                });
+            
+            // 随机选择3个灯谜
+            if (gameState.riddles.length > 0) {
+                gameState.riddles = shuffleArray(gameState.riddles).slice(0, 3);
+            }
+        }
+
+        // 显示语言选择界面
+        function showLanguageSelection() {
+            document.getElementById('language-selection').style.display = 'flex';
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('submit-form').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            document.getElementById('converter').style.display = 'none';
+        }
+
+        // 显示游戏界面
+        function showGameScreen() {
+            document.getElementById('language-selection').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            document.getElementById('submit-form').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            document.getElementById('converter').style.display = 'none';
+            
+            // 如果灯谜库为空，提示用户
+            if (gameState.riddles.length === 0) {
+                alert(`找不到${gameState.language==='chinese'?'中文':'英文'}燈謎庫，請使用轉換工具導入題目。`);
+                toggleConverter();
+                return;
+            }
+            
+            // 重置游戏状态
+            resetGame();
+            
+            // 开始游戏
+            startGame();
+        }
+
+        // 重置游戏状态
+        function resetGame() {
+            gameState.currentRiddleIndex = 0;
+            gameState.timeUsed = 0;
+            gameState.answered = false;
+            gameState.gameCompleted = false;
+            
+            // 更新UI
+            updateTime();
+            updateMultiplier();
+            updateProgress();
+            
+            // 清除计时器
+            if (gameState.timer) {
+                clearInterval(gameState.timer);
+            }
+        }
+
+        // 开始游戏
+        function startGame() {
+            gameState.startTime = Date.now();
+            
+            // 开始计时器
+            gameState.timer = setInterval(() => {
+                gameState.timeUsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+                updateTime();
+                updateMultiplier();
+            }, 100);
+            
+            // 显示第一道题
+            displayCurrentRiddle();
+        }
+
+        // 显示当前灯谜
+        function displayCurrentRiddle() {
+            const riddle = gameState.riddles[gameState.currentRiddleIndex];
+            const title = gameState.language === 'chinese' ? '燈謎 #' : 'Riddle #';
+            
+            document.getElementById('riddle-title').textContent = title + (gameState.currentRiddleIndex + 1);
+            document.getElementById('riddle-text').textContent = riddle.question;
+            
+            // 生成选项
+            generateOptions(riddle);
+            
+            gameState.answered = false;
+        }
+
+        // 生成选项
+        function generateOptions(riddle) {
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            // 创建选项数组（正确答案+干扰项）
+            let options = [riddle.answer, ...riddle.distractors];
+            options = shuffleArray(options);
+            
+            // 生成选项按钮
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.onclick = () => selectOption(option, button, riddle.answer);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // 选择选项
+        function selectOption(selected, button, correctAnswer) {
+            if (gameState.answered) return;
+            
+            if (selected === correctAnswer) {
+                // 正确答案
+                gameState.answered = true;
+                button.classList.add('correct');
+                
+                // 禁用所有选项
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons.forEach(btn => {
+                    btn.classList.add('disabled');
+                });
+                
+                // 延迟后自动进入下一题
+                setTimeout(() => {
+                    nextRiddle();
+                }, 1000);
+            } else {
+                // 错误答案
+                button.classList.add('wrong');
+                button.classList.add('disabled'); // 禁用错误选项
+            }
+        }
+
+        // 下一题
+        function nextRiddle() {
+            gameState.currentRiddleIndex++;
+            
+            if (gameState.currentRiddleIndex < gameState.riddles.length) {
+                // 显示下一题
+                updateProgress();
+                displayCurrentRiddle();
+            } else {
+                // 游戏结束
+                endGame();
+            }
+        }
+
+        // 结束游戏
+        function endGame() {
+            clearInterval(gameState.timer);
+            gameState.gameCompleted = true;
+            
+            // 计算最终分数
+            const finalScore = calculateFinalScore();
+            
+            // 显示胜利视频
+            showVictoryVideo();
+            
+            // 延迟显示提交表单
+            setTimeout(() => {
+                showFinalScore(finalScore);
+            }, 3000);
+        }
+
+        // 计算最终分数
+        function calculateFinalScore() {
+            // 计算倍率：每经过1秒，分数倍率降低0.5%
+            const multiplier = Math.max(0, 1 - (gameState.timeUsed * 0.005));
+            
+            // 计算分数：30分 * 倍率
+            const score = Math.round(30 * multiplier);
+            
+            return {
+                score: score,
+                multiplier: multiplier,
+                timeUsed: gameState.timeUsed
+            };
+        }
+
+        // 显示最终分数
+        function showFinalScore(finalScore) {
+            document.getElementById('final-score').textContent = finalScore.score + (gameState.language === 'chinese' ? ' 分' : ' points');
+            
+            // 显示排行榜前三名
+            displayTopThree();
+            
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('submit-form').style.display = 'block';
+        }
+
+        // 显示胜利视频
+        function showVictoryVideo() {
+            const video = document.getElementById('victory-video');
+            video.style.display = 'block';
+            video.play().catch(e => {
+                console.log('視頻播放失敗:', e);
+                video.style.display = 'none';
+            });
+            
+            // 视频播放3秒后隐藏
+            setTimeout(() => {
+                video.style.display = 'none';
+                video.pause();
+                video.currentTime = 0;
+            }, 3000);
+        }
+
+        // 显示排行榜前三名（从Firebase获取）
+        function displayTopThree() {
+            const topThreeList = document.getElementById('top-three-list');
+            const topThreeLoading = document.getElementById('top-three-loading');
+            
+            topThreeList.innerHTML = '';
+            topThreeLoading.style.display = 'block';
+            
+            if (!leaderboardRef) {
+                topThreeLoading.style.display = 'none';
+                topThreeList.innerHTML = '<div class="no-data">Firebase 未正確初始化</div>';
+                return;
+            }
+            
+            // 从Firebase获取数据，按分数排序，限制前3名
+            const topScoresQuery = window.firebaseQuery(
+                leaderboardRef, 
+                window.firebaseOrderByChild('score'), 
+                window.firebaseLimitToLast(3)
+            );
+            
+            window.firebaseOnValue(topScoresQuery, (snapshot) => {
+                topThreeLoading.style.display = 'none';
+                const data = snapshot.val();
+                
+                if (!data) {
+                    topThreeList.innerHTML = '<div class="no-data">暫無排行榜數據</div>';
+                    return;
+                }
+                
+                // 将数据转换为数组并排序（降序）
+                const leaderboardArray = [];
+                for (const key in data) {
+                    leaderboardArray.push({
+                        id: key,
+                        ...data[key]
+                    });
+                }
+                
+                // 按分数降序排序
+                leaderboardArray.sort((a, b) => b.score - a.score);
+                
+                // 只取前三名
+                const topThree = leaderboardArray.slice(0, 3);
+                
+                if (topThree.length === 0) {
+                    topThreeList.innerHTML = '<div class="no-data">暫無排行榜數據</div>';
+                    return;
+                }
+                
+                // 显示前三名
+                const ranks = [
+                    { class: 'rank-1', icon: '🥇', label: '第一名' },
+                    { class: 'rank-2', icon: '🥈', label: '第二名' },
+                    { class: 'rank-3', icon: '🥉', label: '第三名' }
+                ];
+                
+                topThree.forEach((entry, index) => {
+                    const rank = ranks[index];
+                    const item = document.createElement('div');
+                    item.className = `top-three-item ${rank.class}`;
+                    
+                    item.innerHTML = `
+                        <div class="rank-icon">${rank.icon}</div>
+                        <div class="rank">${rank.label}</div>
+                        <div class="class-info">${entry.class} - ${entry.studentId}</div>
+                        <div class="score">${entry.score} 分</div>
+                    `;
+                    
+                    topThreeList.appendChild(item);
+                });
+                
+                // 如果不足3名，补充空位
+                for (let i = topThree.length; i < 3; i++) {
+                    const rank = ranks[i];
+                    const item = document.createElement('div');
+                    item.className = `top-three-item ${rank.class}`;
+                    item.style.opacity = '0.5';
+                    
+                    item.innerHTML = `
+                        <div class="rank-icon">${rank.icon}</div>
+                        <div class="rank">${rank.label}</div>
+                        <div class="class-info">---</div>
+                        <div class="score">--- 分</div>
+                    `;
+                    
+                    topThreeList.appendChild(item);
+                }
+            }, (error) => {
+                topThreeLoading.style.display = 'none';
+                topThreeList.innerHTML = `<div class="no-data">加載失敗: ${error.message}</div>`;
+                console.error("Firebase 讀取錯誤:", error);
+            });
+        }
+
+        // 提交分数
+        function submitScore() {
+            const classSelect = document.getElementById('class-select');
+            const studentId = document.getElementById('student-id').value;
+            
+            if (!classSelect.value || !studentId) {
+                alert(gameState.language === 'chinese' 
+                    ? '請選擇班別並輸入學號' 
+                    : 'Please select class and enter student ID');
+                return;
+            }
+            
+            // 计算最终分数
+            const finalScore = calculateFinalScore();
+            
+            // 添加到排行榜
+            addToLeaderboard(classSelect.value, studentId, finalScore.score, finalScore.timeUsed, finalScore.multiplier);
+            
+            // 显示排行榜
+            document.getElementById('submit-form').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'block';
+            
+            // 重置表单
+            classSelect.value = '';
+            document.getElementById('student-id').value = '';
+        }
+
+        // 添加到排行榜（保存到Firebase）
+        function addToLeaderboard(className, studentId, score, time, multiplier) {
+            if (!leaderboardRef) {
+                alert('Firebase 未正確初始化，無法提交分數');
+                return;
+            }
+            
+            // 创建新记录
+            const newScoreRef = window.firebasePush(leaderboardRef);
+            
+            window.firebaseSet(newScoreRef, {
+                class: className,
+                studentId: studentId,
+                score: score,
+                time: time,
+                multiplier: multiplier,
+                timestamp: Date.now(),
+                language: gameState.language
+            }).then(() => {
+                console.log("分數已成功提交到 Firebase");
+                // 刷新排行榜显示
+                loadLeaderboard();
+            }).catch((error) => {
+                console.error("提交分數到 Firebase 失敗:", error);
+                alert('提交分數失敗，請稍後再試');
+            });
+        }
+
+        // 加载排行榜数据（从Firebase）
+        function loadLeaderboard() {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            const leaderboardLoading = document.getElementById('leaderboard-loading');
+            const leaderboardTable = document.getElementById('leaderboard-table');
+            
+            leaderboardBody.innerHTML = '';
+            leaderboardLoading.style.display = 'block';
+            leaderboardTable.style.display = 'none';
+            
+            if (!leaderboardRef) {
+                leaderboardLoading.style.display = 'none';
+                leaderboardBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="padding: 30px; text-align: center; color: #666; font-style: italic;">
+                            Firebase 未正確初始化
+                        </td>
+                    </tr>
+                `;
+                leaderboardTable.style.display = 'table';
+                return;
+            }
+            
+            // 从Firebase获取数据，按分数排序
+            const leaderboardQuery = window.firebaseQuery(
+                leaderboardRef, 
+                window.firebaseOrderByChild('score')
+            );
+            
+            window.firebaseOnValue(leaderboardQuery, (snapshot) => {
+                leaderboardLoading.style.display = 'none';
+                leaderboardTable.style.display = 'table';
+                
+                const data = snapshot.val();
+                
+                if (!data) {
+                    leaderboardBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="padding: 30px; text-align: center; color: #666; font-style: italic;">
+                                暫無排行榜數據
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // 将数据转换为数组并排序（降序）
+                const leaderboardArray = [];
+                for (const key in data) {
+                    leaderboardArray.push({
+                        id: key,
+                        ...data[key]
+                    });
+                }
+                
+                // 按分数降序排序
+                leaderboardArray.sort((a, b) => b.score - a.score);
+                
+                // 只保留前20名
+                const topScores = leaderboardArray.slice(0, 20);
+                
+                leaderboardBody.innerHTML = '';
+                
+                topScores.forEach((entry, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // 添加排名类
+                    if (index === 0) row.classList.add('rank-1');
+                    else if (index === 1) row.classList.add('rank-2');
+                    else if (index === 2) row.classList.add('rank-3');
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${entry.class}</td>
+                        <td>${entry.studentId}</td>
+                        <td>${entry.score}</td>
+                        <td>${entry.time}秒</td>
+                        <td>${(entry.multiplier * 100).toFixed(1)}%</td>
+                    `;
+                    
+                    leaderboardBody.appendChild(row);
+                });
+            }, (error) => {
+                leaderboardLoading.style.display = 'none';
+                leaderboardTable.style.display = 'table';
+                leaderboardBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="padding: 30px; text-align: center; color: #ff4444; font-style: italic;">
+                            加載失敗: ${error.message}
+                        </td>
+                    </tr>
+                `;
+                console.error("Firebase 讀取錯誤:", error);
+            });
+        }
+
+        // 切换排行榜显示
+        function toggleLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            const converter = document.getElementById('converter');
+            
+            if (leaderboard.style.display === 'block') {
+                leaderboard.style.display = 'none';
+                showLanguageSelection();
+            } else {
+                leaderboard.style.display = 'block';
+                converter.style.display = 'none';
+                document.getElementById('language-selection').style.display = 'none';
+                document.getElementById('game-screen').style.display = 'none';
+                document.getElementById('submit-form').style.display = 'none';
+                
+                // 加载排行榜数据
+                loadLeaderboard();
+            }
+        }
+
+        // 切换转换工具显示
+        function toggleConverter() {
+            const converter = document.getElementById('converter');
+            const leaderboard = document.getElementById('leaderboard');
+            
+            if (converter.style.display === 'block') {
+                converter.style.display = 'none';
+                showLanguageSelection();
+            } else {
+                converter.style.display = 'block';
+                leaderboard.style.display = 'none';
+                document.getElementById('language-selection').style.display = 'none';
+                document.getElementById('game-screen').style.display = 'none';
+                document.getElementById('submit-form').style.display = 'none';
+            }
+        }
+
+        // 重新开始游戏
+        function restartGame() {
+            if (confirm(gameState.language === 'chinese' 
+                ? '確定要重新開始遊戲嗎？當前進度將會丟失。' 
+                : 'Are you sure you want to restart? Your current progress will be lost.')) {
+                resetGame();
+                startGame();
+            }
+        }
+
+        // 再玩一次
+        function playAgain() {
+            document.getElementById('submit-form').style.display = 'none';
+            showLanguageSelection();
+        }
+
+        // 返回游戏选择
+        function showGameSelection() {
+            document.getElementById('leaderboard').style.display = 'none';
+            showLanguageSelection();
+        }
+
+        // 更新用时显示
+        function updateTime() {
+            document.getElementById('time-used').textContent = gameState.timeUsed;
+        }
+
+        // 更新倍率显示
+        function updateMultiplier() {
+            // 计算倍率：每经过1秒，分数倍率降低0.5%
+            const multiplier = Math.max(0, 1 - (gameState.timeUsed * 0.005));
+            document.getElementById('score-multiplier').textContent = (multiplier * 100).toFixed(1) + '%';
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            const progress = (gameState.currentRiddleIndex / gameState.riddles.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = 
+                `${gameState.currentRiddleIndex + 1}/${gameState.riddles.length}`;
+        }
+
+        // 工具函数：打乱数组顺序
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Excel转JSON转换功能
+        function convertExcel() {
+            const fileInput = document.getElementById('excel-file');
+            const languageType = document.getElementById('language-type').value;
+            
+            if (!fileInput.files.length) {
+                alert('請先選擇一個Excel文件');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // 获取第一个工作表
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    // 将工作表转换为JSON
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    // 处理数据：假设第一行是标题，数据从第二行开始
+                    // 列顺序：谜面、正确答案、干扰项1、干扰项2、干扰项3
+                    const riddles = [];
+                    
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (row.length >= 5) {
+                            riddles.push({
+                                question: row[0] || '',
+                                answer: row[1] || '',
+                                distractors: [row[2] || '', row[3] || '', row[4] || '']
+                            });
+                        }
+                    }
+                    
+                    // 显示转换结果
+                    const jsonOutput = document.getElementById('json-output');
+                    jsonOutput.textContent = JSON.stringify(riddles, null, 2);
+                    
+                    // 保存到变量以便下载
+                    window.convertedRiddles = riddles;
+                    window.convertedLanguage = languageType;
+                    
+                    // 显示结果区域
+                    document.getElementById('converter-result').style.display = 'block';
+                    
+                } catch (error) {
+                    alert('轉換失敗：' + error.message);
+                    console.error(error);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 下载JSON文件
+        function downloadJSON() {
+            if (!window.convertedRiddles) {
+                alert('沒有可下載的數據');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(window.convertedRiddles, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `riddles_${window.convertedLanguage}.json`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // 清理URL
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+            
+            // 提示用户
+            alert(`已生成 ${window.convertedRiddles.length} 個燈謎，文件已下載。請將文件上傳到 GitHub 的 docx/ 文件夾中。`);
+        }
+    </script>
+</body>
+</html>
