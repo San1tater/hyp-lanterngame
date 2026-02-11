@@ -128,42 +128,46 @@
             overflow: hidden;
         }
 
-        /* 语言选择界面 */
+        /* 修改语言选择界面 - 缩小为50vw*50vh并居中 */
         .language-selection {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
-            width: 100%;
+            width: 50vw;
+            height: 50vh;
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .language-selection h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #8b0000;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
         .language-options {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 60%;
+            height: 70%;
         }
 
         .language-btn {
             width: 45%;
             height: 100%;
-            max-height: 300px;
             border-radius: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -187,8 +191,8 @@
         }
 
         .language-btn i {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
 
         /* 游戏进行界面 */
@@ -691,16 +695,21 @@
                 padding: 5px 10px;
             }
             
+            .language-selection {
+                width: 60vw;
+                height: 60vh;
+            }
+            
             .language-selection h2 {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
             
             .language-btn {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
             
             .language-btn i {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
             .riddle-text {
@@ -793,7 +802,7 @@
                         </div>
                         <div class="stat-item">
                             <div>分數倍率</div>
-                            <div class="value" id="score-multiplier">100%</div>
+                            <div class="value" id="score-multiplier">30.0</div>
                         </div>
                         <div class="stat-item">
                             <div>題目進度</div>
@@ -827,7 +836,7 @@
             <!-- 提交表单 -->
             <div class="submit-form" id="submit-form">
                 <h2><i class="fas fa-trophy"></i> 挑戰完成！</h2>
-                <div class="score-display" id="final-score">30 分</div>
+                <div class="score-display" id="final-score">45 分</div>
                 
                 <!-- 排行榜前三名区域 -->
                 <div class="top-three" id="top-three">
@@ -994,6 +1003,7 @@
             language: 'chinese',
             riddles: [],
             currentRiddleIndex: 0,
+            correctAnswers: 0, // 新增：记录答对题数
             timeUsed: 0,
             startTime: 0,
             timer: null,
@@ -1212,6 +1222,7 @@
         // 重置游戏状态
         function resetGame() {
             gameState.currentRiddleIndex = 0;
+            gameState.correctAnswers = 0; // 重置答对题数
             gameState.timeUsed = 0;
             gameState.answered = false;
             gameState.gameCompleted = false;
@@ -1282,6 +1293,7 @@
             if (selected === correctAnswer) {
                 // 正确答案
                 gameState.answered = true;
+                gameState.correctAnswers++; // 增加答对题数
                 button.classList.add('correct');
                 
                 // 禁用所有选项
@@ -1334,22 +1346,26 @@
 
         // 计算最终分数
         function calculateFinalScore() {
-            // 计算倍率：每经过1秒，分数倍率降低0.5%
-            const multiplier = Math.max(0, 1 - (gameState.timeUsed * 0.005));
+            // 计算倍率：初始倍率30，每经过1秒，倍率降低0.5
+            const multiplier = Math.max(0, 30 - (gameState.timeUsed * 0.5));
             
-            // 计算分数：30分 * 倍率
-            const score = Math.round(30 * multiplier);
+            // 计算分数：答对题数 × 15分 × 倍率
+            const score = Math.round(gameState.correctAnswers * 15 * multiplier);
             
             return {
                 score: score,
                 multiplier: multiplier,
-                timeUsed: gameState.timeUsed
+                timeUsed: gameState.timeUsed,
+                correctAnswers: gameState.correctAnswers
             };
         }
 
         // 显示最终分数
         function showFinalScore(finalScore) {
-            document.getElementById('final-score').textContent = finalScore.score + (gameState.language === 'chinese' ? ' 分' : ' points');
+            const scoreText = gameState.language === 'chinese' 
+                ? `${finalScore.score} 分` 
+                : `${finalScore.score} points`;
+            document.getElementById('final-score').textContent = scoreText;
             
             // 显示排行榜前三名
             displayTopThree();
@@ -1602,7 +1618,7 @@
                         <td>${entry.studentId}</td>
                         <td>${entry.score}</td>
                         <td>${entry.time}秒</td>
-                        <td>${(entry.multiplier * 100).toFixed(1)}%</td>
+                        <td>${entry.multiplier.toFixed(1)}</td>
                     `;
                     
                     leaderboardBody.appendChild(row);
@@ -1687,9 +1703,9 @@
 
         // 更新倍率显示
         function updateMultiplier() {
-            // 计算倍率：每经过1秒，分数倍率降低0.5%
-            const multiplier = Math.max(0, 1 - (gameState.timeUsed * 0.005));
-            document.getElementById('score-multiplier').textContent = (multiplier * 100).toFixed(1) + '%';
+            // 计算倍率：初始倍率30，每经过1秒，倍率降低0.5
+            const multiplier = Math.max(0, 30 - (gameState.timeUsed * 0.5));
+            document.getElementById('score-multiplier').textContent = multiplier.toFixed(1);
         }
 
         // 更新进度显示
