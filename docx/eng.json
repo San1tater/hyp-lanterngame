@@ -1,11 +1,74 @@
 [
   {
-    "question": "格式示例：謎面內容+（P6E 12 魏紫筠）",
-    "answer": "A",
+    "question": "What is shorter when it's older and taller when it's younger.  (P6A 16 TSE ALISSA)",
+    "answer": "candle",
     "distractors": [
-      "B",
-      "C",
-      "D"
+      "moon",
+      "cat",
+      "banana"
+    ]
+  },
+  {
+    "question": "They are twin sisters, the same height and the same weight. They work in the kitchen arm-in-arm. Whatever is cooked, they always try it first. (P6A 17 UMER ANAYAH)",
+    "answer": "a pair of chopsticks",
+    "distractors": [
+      "spoon",
+      "fork",
+      "knife"
+    ]
+  },
+  {
+    "question": "A rooster climbed up on to  the barn and laid an egg. Which side did it fall? (P6A 1 AHMED MUJTABA ZAK)",
+    "answer": "It didn't fall anywhere. There was no egg because a rooster can't lay eggs.",
+    "distractors": [
+      "left",
+      "right",
+      "it cracked"
+    ]
+  },
+  {
+    "question": "I light up the night with a bright glow, hung everywhere even on people's doors. (P6E 7 LOUISGRAND ANG ADELLE MIREILLE)",
+    "answer": "A lantern",
+    "distractors": [
+      " A lamp",
+      "A balloon",
+      "A birthday candle"
+    ]
+  },
+  {
+    "question": "What is fragile that if you say my name, you break me. What am I? (P6B 13 OKAWARA KARIN)",
+    "answer": "Silence",
+    "distractors": [
+      "Secret",
+      "Bubble",
+      "Glass"
+    ]
+  },
+  {
+    "question": "I'm filled with hope and dreams as I rise high, with a flickering light and a colorful sky. Children release me, whata beautiful sight. What am I, illuminating the night?\r\n(P6B 9 MITTAL ADVIKA)",
+    "answer": "A sky lantern",
+    "distractors": [
+      "A firework",
+      "A shooting star",
+      "A glowing jellyfish"
+    ]
+  },
+  {
+    "question": "I have cities, but no houses. I have mountains, but no trees. I have water but no fish. What am I? \r\n(P6D 12 SAW-MYINT-OO HTAT AUNG)",
+    "answer": "A map",
+    "distractors": [
+      "A desert",
+      "A dream",
+      "A photograph"
+    ]
+  },
+  {
+    "question": "What goes down but never up? \r\n(P6B 18 WU MAN CHUN)",
+    "answer": "candle",
+    "distractors": [
+      "homework",
+      "escalator",
+      "stocks"
     ]
   }
 ]
