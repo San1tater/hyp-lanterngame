@@ -128,7 +128,7 @@
             overflow: hidden;
         }
 
-        /* 修改语言选择界面 - 缩小为50vw*50vh并居中 */
+        /* 语言选择界面 - 50vw*50vh 并居中 */
         .language-selection {
             display: flex;
             flex-direction: column;
@@ -195,7 +195,7 @@
             margin-bottom: 15px;
         }
 
-        /* 游戏进行界面 - 优化布局 */
+        /* 游戏进行界面 */
         #game-screen {
             display: none;
             flex-direction: column;
@@ -203,50 +203,92 @@
             width: 100%;
         }
 
-        /* 谜题区域 - 占据更多空间 */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;          /* 縮小間距 */
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #8b0000;
+            flex-shrink: 0;
+        }
+
+        .stats {
+            display: flex;
+            gap: 8px;                  /* 縮小間距 */
+            font-size: 0.8rem;         /* 縮小字級 */
+            flex-grow: 1;
+        }
+
+        .stat-item {
+            background-color: #8b0000;
+            color: white;
+            padding: 4px 8px;          /* 縮小內邊距 */
+            border-radius: 6px;
+            flex: 1;
+            text-align: center;
+            min-width: 0;
+        }
+
+        .stat-item .value {
+            font-size: 1.2rem;         /* 縮小數值字級 */
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .restart-btn {
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .restart-btn .btn {
+            padding: 6px 12px;         /* 縮小按鈕 */
+            font-size: 0.9rem;
+        }
+
+        /* 移除進度條區塊，不再有 .progress 樣式 */
+
+        /* 謎題區域 - 放大佔比，移除標題列 */
         .riddle-container {
             text-align: center;
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
             background-color: #fff8e1;
             border-radius: 10px;
             border: 2px solid #ffd700;
             box-shadow: inset 0 0 10px rgba(255, 69, 0, 0.1);
-            flex: 2; /* 占据更多空间 */
+            flex-grow: 1;              /* 佔滿剩餘空間 */
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 0; /* 防止溢出 */
-            overflow: hidden;
+            min-height: 0;            /* 允許 flex 子項縮小 */
         }
 
         .riddle-text {
+            font-size: 2rem;          /* 預設，將由 JS 動態調整 */
+            line-height: 1.2;
             color: #333;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            width: 100%;
-            height: 100%;
             text-align: center;
             word-break: break-word;
-            overflow-wrap: break-word;
-            line-height: 1.3;
-            /* 字体大小自适应 */
-            font-size: calc(1.5rem + 1vw);
-            /* 响应式字体大小 */
-            font-size: clamp(1.2rem, 4vw, 3rem);
+            white-space: normal;      /* 允許換行 */
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 5px;
         }
 
-        /* 选项区域 */
+        /* 選項區域 */
         .options-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 10px;
-            flex: 1; /* 占据较少空间 */
+            flex-grow: 1;
             min-height: 0;
         }
 
@@ -288,7 +330,7 @@
             opacity: 0.7;
         }
 
-        /* 按钮区域 */
+        /* 按鈕區域 */
         .button-container {
             display: flex;
             justify-content: center;
@@ -405,7 +447,7 @@
             text-align: center;
         }
 
-        /* 排行榜前三名区域 */
+        /* 排行榜前三名區域 */
         .top-three {
             background-color: #f9f9f9;
             padding: 15px;
@@ -547,7 +589,7 @@
         .rank-2 { color: #c0c0c0; }
         .rank-3 { color: #cd7f32; }
 
-        /* 页脚 - 简化 */
+        /* 頁腳 - 僅保留版權文字，移除所有按鈕 */
         footer {
             text-align: center;
             color: white;
@@ -556,20 +598,6 @@
             font-size: 0.8rem;
             opacity: 0.9;
             flex-shrink: 0;
-        }
-
-        /* 加载状态 */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-
-        .loading i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #8b0000;
         }
 
         /* 横屏专用样式 */
@@ -611,13 +639,16 @@
             }
             
             .riddle-text {
-                font-size: clamp(1rem, 3vw, 2rem);
-                padding: 8px;
+                font-size: 1.5rem; /* 仍由 JS 動態調整 */
             }
             
             .option-btn {
-                font-size: 1rem;
+                font-size: 1.1rem;
                 padding: 10px 5px;
+            }
+            
+            .stat-item .value {
+                font-size: 1.1rem;
             }
             
             .top-three-list {
@@ -650,7 +681,7 @@
             }
             
             .riddle-text {
-                font-size: clamp(1.5rem, 4vw, 3.5rem);
+                font-size: 2.5rem; /* 仍由 JS 動態調整 */
             }
         }
     </style>
@@ -688,6 +719,30 @@
 
             <!-- 游戏进行界面 -->
             <div id="game-screen">
+                <div class="game-header">
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div>用時</div>
+                            <div class="value" id="time-used">0</div>
+                            <div>秒</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>分數倍率</div>
+                            <div class="value" id="score-multiplier">30.0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div>題目進度</div>
+                            <div class="value" id="progress-text">1/3</div>
+                        </div>
+                    </div>
+                    <div class="restart-btn">
+                        <button class="btn btn-secondary" onclick="restartGame()">
+                            <i class="fas fa-redo"></i> 重來
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 移除进度条，直接放置谜题区域 -->
                 <div class="riddle-container">
                     <div class="riddle-text" id="riddle-text">這裡顯示燈謎內容</div>
                 </div>
@@ -779,9 +834,9 @@
             您的瀏覽器不支援視頻播放。
         </video>
 
-        <!-- 页脚 - 简化 -->
+        <!-- 页脚 - 僅保留文字，無任何按鈕 -->
         <footer>
-            <p>元宵節猜燈謎遊戲 © 2023</p>
+            <p style="margin-top: 5px;">元宵節猜燈謎 &copy; 2025</p>
         </footer>
     </div>
 
@@ -819,16 +874,13 @@
         console.log("Firebase 初始化完成");
     </script>
     
-    <!-- SheetJS 用于Excel转换 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <script>
         // 游戏全局变量
         let gameState = {
             language: 'chinese',
             riddles: [],
             currentRiddleIndex: 0,
-            correctAnswers: 0, // 记录答对题数
+            correctAnswers: 0,
             timeUsed: 0,
             startTime: 0,
             timer: null,
@@ -852,11 +904,9 @@
             const container = document.querySelector('.container');
             
             if (window.innerWidth > window.innerHeight) {
-                // 横屏模式
                 orientationMessage.style.display = 'none';
                 container.style.display = 'flex';
             } else {
-                // 竖屏模式
                 orientationMessage.style.display = 'flex';
                 container.style.display = 'none';
             }
@@ -864,15 +914,12 @@
 
         // 初始化游戏
         document.addEventListener('DOMContentLoaded', function() {
-            // 检查屏幕方向
             checkOrientation();
             window.addEventListener('resize', checkOrientation);
             window.addEventListener('orientationchange', checkOrientation);
             
-            // 生成班别选项
             generateClassOptions();
             
-            // 初始化Firebase引用
             if (window.firebaseRef) {
                 leaderboardRef = window.firebaseRef(window.firebaseDatabase, 'leaderboard');
                 topScoresRef = window.firebaseRef(window.firebaseDatabase, 'topScores');
@@ -881,10 +928,9 @@
                 console.error("Firebase 未正确初始化");
             }
             
-            // 显示语言选择界面
             showLanguageSelection();
             
-            // 尝试加载背景图片，失败时使用默认背景
+            // 背景图片加载
             const bgImage = new Image();
             bgImage.onload = function() {
                 console.log('背景圖片加載成功');
@@ -894,6 +940,13 @@
                 document.body.style.backgroundImage = 'none';
             };
             bgImage.src = 'images/background.png';
+            
+            // 监听窗口大小变化，调整谜面字体
+            window.addEventListener('resize', function() {
+                if (gameState.gameScreenActive) {
+                    adjustRiddleFontSize();
+                }
+            });
         });
 
         // 生成班别选项 (1A-6E)
@@ -917,24 +970,41 @@
         // 选择语言
         function selectLanguage(lang) {
             gameState.language = lang;
-            
-            // 尝试加载对应的灯谜库
             loadRiddles(lang);
-            
-            // 显示游戏界面
+            updateUITextForLanguage(lang);
             showGameScreen();
+        }
+
+        // 根据语言更新UI文本（移除谜题标题相关）
+        function updateUITextForLanguage(lang) {
+            const elements = {
+                'chinese': {
+                    'time-label': '用時',
+                    'multiplier-label': '分數倍率',
+                    'progress-label': '題目進度'
+                },
+                'english': {
+                    'time-label': 'Time Used',
+                    'multiplier-label': 'Score Multiplier',
+                    'progress-label': 'Progress'
+                }
+            };
+            
+            const texts = elements[lang];
+            const statItems = document.querySelectorAll('.stat-item');
+            statItems[0].querySelector('div:first-child').textContent = texts['time-label'];
+            statItems[1].querySelector('div:first-child').textContent = texts['multiplier-label'];
+            statItems[2].querySelector('div:first-child').textContent = texts['progress-label'];
         }
 
         // 加载灯谜库
         function loadRiddles(lang) {
-            // 尝试从本地存储加载
             const storedRiddles = localStorage.getItem(`riddles_${lang}`);
             
             if (storedRiddles) {
                 gameState.riddles = JSON.parse(storedRiddles);
                 console.log(`已從本地存儲加載 ${gameState.riddles.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
             } else {
-                // 如果本地存储中没有，尝试从文件加载
                 fetchRiddlesFromFile(lang);
             }
         }
@@ -953,11 +1023,8 @@
                 .then(data => {
                     gameState.riddles = data;
                     console.log(`已從文件加載 ${gameState.riddles.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
-                    
-                    // 保存到本地存储
                     localStorage.setItem(`riddles_${lang}`, JSON.stringify(data));
                     
-                    // 如果游戏已经开始，需要重新开始
                     if (gameState.startTime > 0) {
                         resetGame();
                         startGame();
@@ -965,18 +1032,14 @@
                 })
                 .catch(error => {
                     console.error(`加載燈謎庫失敗: ${error.message}`);
-                    
-                    // 使用默认灯谜库（空）
                     gameState.riddles = defaultRiddles[lang];
                     
-                    // 如果默认灯谜库为空，显示提示
                     if (gameState.riddles.length === 0) {
-                        alert(`找不到${lang==='chinese'?'中文':'英文'}燈謎庫，請管理員導入題目。`);
-                        return;
+                        alert(`找不到${lang==='chinese'?'中文':'英文'}燈謎庫，請手動上傳題目檔案至 docx/ 資料夾。`);
+                        // 移除轉換工具呼叫，改為單純提示
                     }
                 });
             
-            // 随机选择3个灯谜
             if (gameState.riddles.length > 0) {
                 gameState.riddles = shuffleArray(gameState.riddles).slice(0, 3);
             }
@@ -988,6 +1051,7 @@
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('submit-form').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'none';
+            gameState.gameScreenActive = false;
         }
 
         // 显示游戏界面
@@ -996,29 +1060,30 @@
             document.getElementById('game-screen').style.display = 'flex';
             document.getElementById('submit-form').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'none';
+            gameState.gameScreenActive = true;
             
-            // 如果灯谜库为空，提示用户
             if (gameState.riddles.length === 0) {
-                alert(`找不到${gameState.language==='chinese'?'中文':'英文'}燈謎庫，請管理員導入題目。`);
+                alert(`找不到${gameState.language==='chinese'?'中文':'英文'}燈謎庫，請手動上傳題目檔案。`);
+                showLanguageSelection();
                 return;
             }
             
-            // 重置游戏状态
             resetGame();
-            
-            // 开始游戏
             startGame();
         }
 
         // 重置游戏状态
         function resetGame() {
             gameState.currentRiddleIndex = 0;
-            gameState.correctAnswers = 0; // 重置答对题数
+            gameState.correctAnswers = 0;
             gameState.timeUsed = 0;
             gameState.answered = false;
             gameState.gameCompleted = false;
             
-            // 清除计时器
+            updateTime();
+            updateMultiplier();
+            updateProgress();
+            
             if (gameState.timer) {
                 clearInterval(gameState.timer);
             }
@@ -1028,50 +1093,84 @@
         function startGame() {
             gameState.startTime = Date.now();
             
-            // 开始计时器
             gameState.timer = setInterval(() => {
                 gameState.timeUsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+                updateTime();
+                updateMultiplier();
             }, 100);
             
-            // 显示第一道题
             displayCurrentRiddle();
         }
 
         // 显示当前灯谜
         function displayCurrentRiddle() {
             const riddle = gameState.riddles[gameState.currentRiddleIndex];
-            
             document.getElementById('riddle-text').textContent = riddle.question;
             
-            // 调整字体大小以适应容器
-            adjustRiddleFontSize();
-            
-            // 生成选项
             generateOptions(riddle);
-            
             gameState.answered = false;
+            
+            // 调整谜面字体大小
+            adjustRiddleFontSize();
         }
 
-        // 调整谜面字体大小以适应容器
+        // 自适应谜面字体大小
         function adjustRiddleFontSize() {
+            const container = document.querySelector('.riddle-container');
             const riddleText = document.getElementById('riddle-text');
-            const container = riddleText.parentElement;
+            if (!container || !riddleText) return;
             
-            // 重置字体大小
-            riddleText.style.fontSize = '';
+            const text = riddleText.textContent;
+            if (!text) return;
             
-            // 获取容器尺寸和文本尺寸
-            const containerHeight = container.clientHeight;
+            // 重置字体为较小值，确保可以测量
+            riddleText.style.fontSize = '10px';
+            riddleText.style.whiteSpace = 'normal';
+            riddleText.style.wordBreak = 'break-word';
+            
             const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
             
-            // 逐步减小字体直到文本适合容器
-            let fontSize = 60; // 初始较大字体
+            // 使用 canvas 测量文本宽度
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            let low = 10;
+            let high = 200;
+            let fontSize = 10;
+            
+            // 二分法查找合适字体大小（宽度不超过容器宽度，高度不超过容器高度）
+            for (let i = 0; i < 10; i++) {
+                const mid = Math.floor((low + high) / 2);
+                context.font = `bold ${mid}px 'Noto Sans SC', sans-serif`;
+                const textWidth = context.measureText(text).width;
+                
+                // 估计行数：简单按每行字符数估算，此处采用保守策略，假设最多两行
+                // 更精确：设置临时样式测量行高
+                riddleText.style.fontSize = mid + 'px';
+                // 强制重绘以获取 scrollHeight
+                // 这里直接使用 clientHeight 和 scrollHeight 判断
+                const scrollHeight = riddleText.scrollHeight;
+                const lineHeight = parseInt(window.getComputedStyle(riddleText).lineHeight) || mid * 1.2;
+                const estimatedLines = Math.ceil(scrollHeight / lineHeight);
+                
+                if (textWidth < containerWidth * 0.95 && scrollHeight < containerHeight * 0.9) {
+                    fontSize = mid;
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+            
+            // 设置最终字体大小
             riddleText.style.fontSize = fontSize + 'px';
             
-            // 检查文本是否溢出容器
-            while ((riddleText.scrollHeight > containerHeight || riddleText.scrollWidth > containerWidth) && fontSize > 10) {
+            // 若仍溢出，强制缩小
+            let safeCount = 0;
+            while ((riddleText.scrollWidth > container.clientWidth || riddleText.scrollHeight > container.clientHeight) && fontSize > 12 && safeCount < 20) {
                 fontSize -= 2;
                 riddleText.style.fontSize = fontSize + 'px';
+                safeCount++;
             }
         }
 
@@ -1080,11 +1179,9 @@
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
             
-            // 创建选项数组（正确答案+干扰项）
             let options = [riddle.answer, ...riddle.distractors];
             options = shuffleArray(options);
             
-            // 生成选项按钮
             options.forEach(option => {
                 const button = document.createElement('button');
                 button.className = 'option-btn';
@@ -1099,25 +1196,21 @@
             if (gameState.answered) return;
             
             if (selected === correctAnswer) {
-                // 正确答案
                 gameState.answered = true;
-                gameState.correctAnswers++; // 增加答对题数
+                gameState.correctAnswers++;
                 button.classList.add('correct');
                 
-                // 禁用所有选项
                 const buttons = document.querySelectorAll('.option-btn');
                 buttons.forEach(btn => {
                     btn.classList.add('disabled');
                 });
                 
-                // 延迟后自动进入下一题
                 setTimeout(() => {
                     nextRiddle();
                 }, 1000);
             } else {
-                // 错误答案
                 button.classList.add('wrong');
-                button.classList.add('disabled'); // 禁用错误选项
+                button.classList.add('disabled');
             }
         }
 
@@ -1126,10 +1219,9 @@
             gameState.currentRiddleIndex++;
             
             if (gameState.currentRiddleIndex < gameState.riddles.length) {
-                // 显示下一题
+                updateProgress();
                 displayCurrentRiddle();
             } else {
-                // 游戏结束
                 endGame();
             }
         }
@@ -1139,13 +1231,9 @@
             clearInterval(gameState.timer);
             gameState.gameCompleted = true;
             
-            // 计算最终分数
             const finalScore = calculateFinalScore();
-            
-            // 显示胜利视频
             showVictoryVideo();
             
-            // 延迟显示提交表单
             setTimeout(() => {
                 showFinalScore(finalScore);
             }, 3000);
@@ -1153,10 +1241,7 @@
 
         // 计算最终分数
         function calculateFinalScore() {
-            // 计算倍率：初始倍率30，每经过1秒，倍率降低0.5
             const multiplier = Math.max(0, 30 - (gameState.timeUsed * 0.5));
-            
-            // 计算分数：答对题数 × 15分 × 倍率
             const score = Math.round(gameState.correctAnswers * 15 * multiplier);
             
             return {
@@ -1174,11 +1259,11 @@
                 : `${finalScore.score} points`;
             document.getElementById('final-score').textContent = scoreText;
             
-            // 显示排行榜前三名
             displayTopThree();
             
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('submit-form').style.display = 'block';
+            gameState.gameScreenActive = false;
         }
 
         // 显示胜利视频
@@ -1190,7 +1275,6 @@
                 video.style.display = 'none';
             });
             
-            // 视频播放3秒后隐藏
             setTimeout(() => {
                 video.style.display = 'none';
                 video.pause();
@@ -1198,7 +1282,7 @@
             }, 3000);
         }
 
-        // 显示排行榜前三名（从Firebase获取）
+        // 显示排行榜前三名
         function displayTopThree() {
             const topThreeList = document.getElementById('top-three-list');
             const topThreeLoading = document.getElementById('top-three-loading');
@@ -1212,7 +1296,6 @@
                 return;
             }
             
-            // 从Firebase获取数据，按分数排序，限制前3名
             const topScoresQuery = window.firebaseQuery(
                 leaderboardRef, 
                 window.firebaseOrderByChild('score'), 
@@ -1228,7 +1311,6 @@
                     return;
                 }
                 
-                // 将数据转换为数组并排序（降序）
                 const leaderboardArray = [];
                 for (const key in data) {
                     leaderboardArray.push({
@@ -1237,10 +1319,7 @@
                     });
                 }
                 
-                // 按分数降序排序
                 leaderboardArray.sort((a, b) => b.score - a.score);
-                
-                // 只取前三名
                 const topThree = leaderboardArray.slice(0, 3);
                 
                 if (topThree.length === 0) {
@@ -1248,7 +1327,6 @@
                     return;
                 }
                 
-                // 显示前三名
                 const ranks = [
                     { class: 'rank-1', icon: '🥇', label: '第一名' },
                     { class: 'rank-2', icon: '🥈', label: '第二名' },
@@ -1270,7 +1348,6 @@
                     topThreeList.appendChild(item);
                 });
                 
-                // 如果不足3名，补充空位
                 for (let i = topThree.length; i < 3; i++) {
                     const rank = ranks[i];
                     const item = document.createElement('div');
@@ -1305,29 +1382,23 @@
                 return;
             }
             
-            // 计算最终分数
             const finalScore = calculateFinalScore();
-            
-            // 添加到排行榜
             addToLeaderboard(classSelect.value, studentId, finalScore.score, finalScore.timeUsed, finalScore.multiplier);
             
-            // 显示排行榜
             document.getElementById('submit-form').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'block';
             
-            // 重置表单
             classSelect.value = '';
             document.getElementById('student-id').value = '';
         }
 
-        // 添加到排行榜（保存到Firebase）
+        // 添加到排行榜
         function addToLeaderboard(className, studentId, score, time, multiplier) {
             if (!leaderboardRef) {
                 alert('Firebase 未正確初始化，無法提交分數');
                 return;
             }
             
-            // 创建新记录
             const newScoreRef = window.firebasePush(leaderboardRef);
             
             window.firebaseSet(newScoreRef, {
@@ -1340,7 +1411,6 @@
                 language: gameState.language
             }).then(() => {
                 console.log("分數已成功提交到 Firebase");
-                // 刷新排行榜显示
                 loadLeaderboard();
             }).catch((error) => {
                 console.error("提交分數到 Firebase 失敗:", error);
@@ -1348,7 +1418,7 @@
             });
         }
 
-        // 加载排行榜数据（从Firebase）
+        // 加载排行榜数据
         function loadLeaderboard() {
             const leaderboardBody = document.getElementById('leaderboard-body');
             const leaderboardLoading = document.getElementById('leaderboard-loading');
@@ -1371,7 +1441,6 @@
                 return;
             }
             
-            // 从Firebase获取数据，按分数排序
             const leaderboardQuery = window.firebaseQuery(
                 leaderboardRef, 
                 window.firebaseOrderByChild('score')
@@ -1394,7 +1463,6 @@
                     return;
                 }
                 
-                // 将数据转换为数组并排序（降序）
                 const leaderboardArray = [];
                 for (const key in data) {
                     leaderboardArray.push({
@@ -1403,10 +1471,7 @@
                     });
                 }
                 
-                // 按分数降序排序
                 leaderboardArray.sort((a, b) => b.score - a.score);
-                
-                // 只保留前20名
                 const topScores = leaderboardArray.slice(0, 20);
                 
                 leaderboardBody.innerHTML = '';
@@ -1414,7 +1479,6 @@
                 topScores.forEach((entry, index) => {
                     const row = document.createElement('tr');
                     
-                    // 添加排名类
                     if (index === 0) row.classList.add('rank-1');
                     else if (index === 1) row.classList.add('rank-2');
                     else if (index === 2) row.classList.add('rank-3');
@@ -1456,8 +1520,6 @@
                 document.getElementById('language-selection').style.display = 'none';
                 document.getElementById('game-screen').style.display = 'none';
                 document.getElementById('submit-form').style.display = 'none';
-                
-                // 加载排行榜数据
                 loadLeaderboard();
             }
         }
@@ -1482,6 +1544,23 @@
         function showGameSelection() {
             document.getElementById('leaderboard').style.display = 'none';
             showLanguageSelection();
+        }
+
+        // 更新用时显示
+        function updateTime() {
+            document.getElementById('time-used').textContent = gameState.timeUsed;
+        }
+
+        // 更新倍率显示
+        function updateMultiplier() {
+            const multiplier = Math.max(0, 30 - (gameState.timeUsed * 0.5));
+            document.getElementById('score-multiplier').textContent = multiplier.toFixed(1);
+        }
+
+        // 更新进度显示（仅文字）
+        function updateProgress() {
+            document.getElementById('progress-text').textContent = 
+                `${gameState.currentRiddleIndex + 1}/${gameState.riddles.length}`;
         }
 
         // 工具函数：打乱数组顺序
