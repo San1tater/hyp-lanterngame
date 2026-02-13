@@ -1158,8 +1158,8 @@
             }
             
             // 英文強制不小於24px
-            if (isEnglish && fontSize < 24) {
-                fontSize = 24;
+            if (isEnglish && fontSize < 18) {
+                fontSize = 18;
             }
             
             // 設定最終字體大小
@@ -1171,7 +1171,7 @@
                 const overflowHeight = riddleText.scrollHeight > container.clientHeight;
                 if (!overflowHeight) break;
                 
-                fontSize = Math.max(isEnglish ? 24 : 8, fontSize - 2);
+                fontSize = Math.max(isEnglish ? 18 : 8, fontSize - 2);
                 riddleText.style.fontSize = fontSize + 'px';
                 safeCount++;
             }
