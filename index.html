@@ -207,7 +207,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;          /* 縮小間距 */
+            margin-bottom: 5px;
             padding-bottom: 5px;
             border-bottom: 1px dashed #8b0000;
             flex-shrink: 0;
@@ -215,15 +215,15 @@
 
         .stats {
             display: flex;
-            gap: 8px;                  /* 縮小間距 */
-            font-size: 0.8rem;         /* 縮小字級 */
+            gap: 8px;
+            font-size: 0.8rem;
             flex-grow: 1;
         }
 
         .stat-item {
             background-color: #8b0000;
             color: white;
-            padding: 4px 8px;          /* 縮小內邊距 */
+            padding: 4px 8px;
             border-radius: 6px;
             flex: 1;
             text-align: center;
@@ -231,7 +231,7 @@
         }
 
         .stat-item .value {
-            font-size: 1.2rem;         /* 縮小數值字級 */
+            font-size: 1.2rem;
             font-weight: bold;
             color: #ffd700;
         }
@@ -242,11 +242,9 @@
         }
 
         .restart-btn .btn {
-            padding: 6px 12px;         /* 縮小按鈕 */
+            padding: 6px 12px;
             font-size: 0.9rem;
         }
-
-        /* 移除進度條區塊，不再有 .progress 樣式 */
 
         /* 謎題區域 - 放大佔比，移除標題列 */
         .riddle-container {
@@ -257,15 +255,15 @@
             border-radius: 10px;
             border: 2px solid #ffd700;
             box-shadow: inset 0 0 10px rgba(255, 69, 0, 0.1);
-            flex-grow: 1;              /* 佔滿剩餘空間 */
+            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 0;            /* 允許 flex 子項縮小 */
+            min-height: 0;
         }
 
         .riddle-text {
-            font-size: 2rem;          /* 預設，將由 JS 動態調整 */
+            font-size: 2rem;
             line-height: 1.2;
             color: #333;
             font-weight: bold;
@@ -274,7 +272,7 @@
             justify-content: center;
             text-align: center;
             word-break: break-word;
-            white-space: normal;      /* 允許換行 */
+            white-space: normal;
             width: 100%;
             height: 100%;
             margin: 0;
@@ -589,7 +587,7 @@
         .rank-2 { color: #c0c0c0; }
         .rank-3 { color: #cd7f32; }
 
-        /* 頁腳 - 僅保留版權文字，移除所有按鈕 */
+        /* 頁腳 - 僅保留版權文字 */
         footer {
             text-align: center;
             color: white;
@@ -639,7 +637,7 @@
             }
             
             .riddle-text {
-                font-size: 1.5rem; /* 仍由 JS 動態調整 */
+                font-size: 1.5rem;
             }
             
             .option-btn {
@@ -681,7 +679,7 @@
             }
             
             .riddle-text {
-                font-size: 2.5rem; /* 仍由 JS 動態調整 */
+                font-size: 2.5rem;
             }
         }
     </style>
@@ -742,7 +740,7 @@
                     </div>
                 </div>
 
-                <!-- 移除进度条，直接放置谜题区域 -->
+                <!-- 謎題區域 -->
                 <div class="riddle-container">
                     <div class="riddle-text" id="riddle-text">這裡顯示燈謎內容</div>
                 </div>
@@ -834,7 +832,7 @@
             您的瀏覽器不支援視頻播放。
         </video>
 
-        <!-- 页脚 - 僅保留文字，無任何按鈕 -->
+        <!-- 页脚 - 僅保留文字 -->
         <footer>
             <p style="margin-top: 5px;">元宵節猜燈謎 &copy; 2025</p>
         </footer>
@@ -878,25 +876,20 @@
         // 游戏全局变量
         let gameState = {
             language: 'chinese',
-            riddles: [],
+            riddles: [],          // 当前轮抽中的3道题
+            allRiddles: [],       // 从JSON加载的完整题库（用于重新抽题）
             currentRiddleIndex: 0,
             correctAnswers: 0,
             timeUsed: 0,
             startTime: 0,
             timer: null,
             answered: false,
-            gameCompleted: false
+            gameCompleted: false,
+            gameScreenActive: false
         };
 
         // Firebase数据库引用
         let leaderboardRef = null;
-        let topScoresRef = null;
-
-        // 默认灯谜库（空数组，将从JSON文件加载）
-        const defaultRiddles = {
-            chinese: [],
-            english: []
-        };
 
         // 屏幕方向检测
         function checkOrientation() {
@@ -922,7 +915,6 @@
             
             if (window.firebaseRef) {
                 leaderboardRef = window.firebaseRef(window.firebaseDatabase, 'leaderboard');
-                topScoresRef = window.firebaseRef(window.firebaseDatabase, 'topScores');
                 console.log("Firebase 引用已初始化");
             } else {
                 console.error("Firebase 未正确初始化");
@@ -970,12 +962,11 @@
         // 选择语言
         function selectLanguage(lang) {
             gameState.language = lang;
-            loadRiddles(lang);
             updateUITextForLanguage(lang);
-            showGameScreen();
+            loadRiddlesFromFile(lang); // 直接從檔案載入，不經本地存儲
         }
 
-        // 根据语言更新UI文本（移除谜题标题相关）
+        // 根据语言更新UI文本
         function updateUITextForLanguage(lang) {
             const elements = {
                 'chinese': {
@@ -997,20 +988,8 @@
             statItems[2].querySelector('div:first-child').textContent = texts['progress-label'];
         }
 
-        // 加载灯谜库
-        function loadRiddles(lang) {
-            const storedRiddles = localStorage.getItem(`riddles_${lang}`);
-            
-            if (storedRiddles) {
-                gameState.riddles = JSON.parse(storedRiddles);
-                console.log(`已從本地存儲加載 ${gameState.riddles.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
-            } else {
-                fetchRiddlesFromFile(lang);
-            }
-        }
-
-        // 从文件加载灯谜库
-        function fetchRiddlesFromFile(lang) {
+        // 從JSON文件載入燈謎庫（不檢查localStorage）
+        function loadRiddlesFromFile(lang) {
             const filename = lang === 'chinese' ? 'docx/chi.json' : 'docx/eng.json';
             
             fetch(filename)
@@ -1021,28 +1000,31 @@
                     return response.json();
                 })
                 .then(data => {
-                    gameState.riddles = data;
-                    console.log(`已從文件加載 ${gameState.riddles.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
-                    localStorage.setItem(`riddles_${lang}`, JSON.stringify(data));
-                    
-                    if (gameState.startTime > 0) {
-                        resetGame();
-                        startGame();
-                    }
+                    console.log(`已從文件加載 ${data.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
+                    // 保存完整題庫
+                    gameState.allRiddles = data;
+                    // 隨機抽取3道題作為本輪題目
+                    pickRandomRiddles();
+                    // 顯示遊戲畫面
+                    showGameScreen();
                 })
                 .catch(error => {
                     console.error(`加載燈謎庫失敗: ${error.message}`);
-                    gameState.riddles = defaultRiddles[lang];
-                    
-                    if (gameState.riddles.length === 0) {
-                        alert(`找不到${lang==='chinese'?'中文':'英文'}燈謎庫，請手動上傳題目檔案至 docx/ 資料夾。`);
-                        // 移除轉換工具呼叫，改為單純提示
-                    }
+                    alert(`找不到${lang==='chinese'?'中文':'英文'}燈謎庫，請確認 docx/chi.json 或 docx/eng.json 檔案是否存在。`);
+                    // 停留在語言選擇畫面
                 });
-            
-            if (gameState.riddles.length > 0) {
-                gameState.riddles = shuffleArray(gameState.riddles).slice(0, 3);
+        }
+
+        // 從完整題庫中隨機抽取3道題，儲存到 gameState.riddles
+        function pickRandomRiddles() {
+            if (!gameState.allRiddles || gameState.allRiddles.length === 0) {
+                gameState.riddles = [];
+                return;
             }
+            // 複製陣列避免影響原題庫
+            const shuffled = shuffleArray([...gameState.allRiddles]);
+            gameState.riddles = shuffled.slice(0, 3);
+            console.log('本輪抽題:', gameState.riddles);
         }
 
         // 显示语言选择界面
@@ -1054,19 +1036,18 @@
             gameState.gameScreenActive = false;
         }
 
-        // 显示游戏界面
+        // 显示游戏界面（前提：題庫已載入且已抽題）
         function showGameScreen() {
+            if (!gameState.riddles || gameState.riddles.length === 0) {
+                alert('目前沒有可用的燈謎，請稍後再試。');
+                return;
+            }
+
             document.getElementById('language-selection').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
             document.getElementById('submit-form').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'none';
             gameState.gameScreenActive = true;
-            
-            if (gameState.riddles.length === 0) {
-                alert(`找不到${gameState.language==='chinese'?'中文':'英文'}燈謎庫，請手動上傳題目檔案。`);
-                showLanguageSelection();
-                return;
-            }
             
             resetGame();
             startGame();
@@ -1110,11 +1091,11 @@
             generateOptions(riddle);
             gameState.answered = false;
             
-            // 调整谜面字体大小
+            // 调整谜面字体大小（英文有特殊處理）
             adjustRiddleFontSize();
         }
 
-        // 自适应谜面字体大小
+        // 自适应谜面字体大小（英文最多三行，最小16px）
         function adjustRiddleFontSize() {
             const container = document.querySelector('.riddle-container');
             const riddleText = document.getElementById('riddle-text');
@@ -1123,7 +1104,9 @@
             const text = riddleText.textContent;
             if (!text) return;
             
-            // 重置字体为较小值，确保可以测量
+            const isEnglish = gameState.language === 'english';
+            
+            // 重置字体为较小值
             riddleText.style.fontSize = '10px';
             riddleText.style.whiteSpace = 'normal';
             riddleText.style.wordBreak = 'break-word';
@@ -1139,22 +1122,26 @@
             let high = 200;
             let fontSize = 10;
             
-            // 二分法查找合适字体大小（宽度不超过容器宽度，高度不超过容器高度）
+            // 二分法查找合适字体大小
             for (let i = 0; i < 10; i++) {
                 const mid = Math.floor((low + high) / 2);
                 context.font = `bold ${mid}px 'Noto Sans SC', sans-serif`;
                 const textWidth = context.measureText(text).width;
                 
-                // 估计行数：简单按每行字符数估算，此处采用保守策略，假设最多两行
-                // 更精确：设置临时样式测量行高
+                // 暫時設置字體以獲取行數
                 riddleText.style.fontSize = mid + 'px';
-                // 强制重绘以获取 scrollHeight
-                // 这里直接使用 clientHeight 和 scrollHeight 判断
+                // 強制重繪以獲取 scrollHeight
                 const scrollHeight = riddleText.scrollHeight;
                 const lineHeight = parseInt(window.getComputedStyle(riddleText).lineHeight) || mid * 1.2;
                 const estimatedLines = Math.ceil(scrollHeight / lineHeight);
                 
-                if (textWidth < containerWidth * 0.95 && scrollHeight < containerHeight * 0.9) {
+                // 中文：寬度限制較嚴格，允許更多行
+                // 英文：寬度可稍放寬，但行數不得超過3行
+                let widthLimit = containerWidth * 0.95;
+                let heightLimit = containerHeight * 0.9;
+                let lineLimit = isEnglish ? 3 : 10; // 英文最多3行
+                
+                if (textWidth < widthLimit && scrollHeight < heightLimit && estimatedLines <= lineLimit) {
                     fontSize = mid;
                     low = mid + 1;
                 } else {
@@ -1162,13 +1149,25 @@
                 }
             }
             
-            // 设置最终字体大小
+            // 英文設置最小字級為 16px
+            if (isEnglish && fontSize < 16) {
+                fontSize = 16;
+            }
+            
+            // 設定最終字體大小
             riddleText.style.fontSize = fontSize + 'px';
             
-            // 若仍溢出，强制缩小
+            // 若仍溢出，強制縮小（英文會受最小字級保護）
             let safeCount = 0;
-            while ((riddleText.scrollWidth > container.clientWidth || riddleText.scrollHeight > container.clientHeight) && fontSize > 12 && safeCount < 20) {
-                fontSize -= 2;
+            while (safeCount < 20) {
+                const overflowWidth = riddleText.scrollWidth > container.clientWidth;
+                const overflowHeight = riddleText.scrollHeight > container.clientHeight;
+                const lines = Math.ceil(riddleText.scrollHeight / (parseInt(window.getComputedStyle(riddleText).lineHeight) || fontSize * 1.2));
+                const tooManyLines = isEnglish && lines > 3;
+                
+                if (!overflowWidth && !overflowHeight && !tooManyLines) break;
+                
+                fontSize = Math.max(isEnglish ? 16 : 8, fontSize - 2);
                 riddleText.style.fontSize = fontSize + 'px';
                 safeCount++;
             }
@@ -1282,7 +1281,7 @@
             }, 3000);
         }
 
-        // 显示排行榜前三名
+        // 显示排行榜前三名（从Firebase获取）
         function displayTopThree() {
             const topThreeList = document.getElementById('top-three-list');
             const topThreeLoading = document.getElementById('top-three-loading');
@@ -1392,7 +1391,7 @@
             document.getElementById('student-id').value = '';
         }
 
-        // 添加到排行榜
+        // 添加到排行榜（保存到Firebase）
         function addToLeaderboard(className, studentId, score, time, multiplier) {
             if (!leaderboardRef) {
                 alert('Firebase 未正確初始化，無法提交分數');
@@ -1418,7 +1417,7 @@
             });
         }
 
-        // 加载排行榜数据
+        // 加载排行榜数据（从Firebase）
         function loadLeaderboard() {
             const leaderboardBody = document.getElementById('leaderboard-body');
             const leaderboardLoading = document.getElementById('leaderboard-loading');
@@ -1524,23 +1523,23 @@
             }
         }
 
-        // 重新开始游戏
+        // 重新开始游戏（重新載入題庫並抽題）
         function restartGame() {
             if (confirm(gameState.language === 'chinese' 
-                ? '確定要重新開始遊戲嗎？當前進度將會丟失。' 
-                : 'Are you sure you want to restart? Your current progress will be lost.')) {
-                resetGame();
-                startGame();
+                ? '確定要重新開始遊戲嗎？當前進度將會丟失，並重新抽取題目。' 
+                : 'Are you sure you want to restart? Your current progress will be lost and new riddles will be selected.')) {
+                // 重新從檔案載入（會自動抽題並顯示遊戲畫面）
+                loadRiddlesFromFile(gameState.language);
             }
         }
 
-        // 再玩一次
+        // 再玩一次（返回主選單）
         function playAgain() {
             document.getElementById('submit-form').style.display = 'none';
             showLanguageSelection();
         }
 
-        // 返回游戏选择
+        // 返回游戏选择（從排行榜返回）
         function showGameSelection() {
             document.getElementById('leaderboard').style.display = 'none';
             showLanguageSelection();
