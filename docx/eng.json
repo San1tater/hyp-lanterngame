@@ -54,7 +54,7 @@
     ]
   },
   {
-    "question": "I have cities, but no houses.  \r\n I have mountains, but no trees. I have water but no fish. What am I? \r\n(P6D 12 SAW-MYINT-OO HTAT AUNG)",
+    "question": "I have cities, but no houses.  \r\n I have mountains, but no trees.  \r\n I have water but no fish.  \r\n What am I? \r\n(P6D 12 SAW-MYINT-OO HTAT AUNG)",
     "answer": "A map",
     "distractors": [
       "A desert",
