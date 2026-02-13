@@ -128,7 +128,7 @@
             overflow: hidden;
         }
 
-        /* 语言选择界面 - 50vw*50vh 并居中 */
+        /* ---------- 语言选择界面（含新增排行榜按钮） ---------- */
         .language-selection {
             display: flex;
             flex-direction: column;
@@ -144,9 +144,9 @@
         }
 
         .language-selection h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: #8b0000;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -156,18 +156,19 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            height: 70%;
+            flex: 1 1 auto;
+            min-height: 0;
         }
 
         .language-btn {
             width: 45%;
-            height: 100%;
+            height: 80%;
             border-radius: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -191,8 +192,35 @@
         }
 
         .language-btn i {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+        }
+
+        /* 首頁查看排行榜按鈕 */
+        .btn-view-leaderboard {
+            margin-top: 20px;
+            width: 60%;
+            padding: 12px 20px;
+            background-color: #8b0000;
+            color: white;
+            border: 2px solid #ffd700;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-view-leaderboard:hover {
+            background-color: #ff4500;
+            transform: scale(1.02);
+            border-color: #fff;
+        }
+        .btn-view-leaderboard i {
+            font-size: 1.3rem;
         }
 
         /* 游戏进行界面 */
@@ -246,7 +274,7 @@
             font-size: 0.9rem;
         }
 
-        /* 謎題區域 - 放大佔比，移除標題列 */
+        /* 謎題區域 */
         .riddle-container {
             text-align: center;
             padding: 10px;
@@ -260,7 +288,6 @@
             align-items: center;
             justify-content: center;
             min-height: 0;
-            /* 允許內容溢出時被裁剪，不產生滾動條 */
             overflow: hidden;
         }
 
@@ -277,7 +304,6 @@
             height: 100%;
             margin: 0;
             padding: 5px;
-            /* 預設 white-space 會由 JS 根據語言動態覆寫 */
             white-space: normal;
             word-break: break-word;
         }
@@ -385,97 +411,66 @@
             display: none;
         }
 
-        /* 提交表单 */
+        /* ---------- 提交表单（挑戰完成頁面） 無滾動條、緊湊排版 ---------- */
         .submit-form {
             display: none;
             background-color: white;
-            padding: 20px;
+            padding: 12px 18px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             width: 100%;
             height: 100%;
             text-align: center;
-            overflow-y: auto;
+            overflow: hidden;          /* 移除滾動條 */
+            display: flex;
+            flex-direction: column;
         }
 
         .submit-form h2 {
             color: #8b0000;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
             margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        select:focus, input:focus {
-            border-color: #8b0000;
-            outline: none;
+            font-size: 1.6rem;
+            flex-shrink: 0;
         }
 
         .score-display {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #8b0000;
             font-weight: bold;
-            margin: 15px 0;
+            margin: 5px 0;
             text-align: center;
+            flex-shrink: 0;
         }
 
-        /* 排行榜前三名區域 */
+        /* 排行榜前三名區域 - 縮小版 */
         .top-three {
             background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin: 5px 0;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .top-three h3 {
             color: #8b0000;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
+            margin-bottom: 6px;
+            font-size: 1.2rem;
         }
 
         .top-three-list {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 5px;
         }
 
         .top-three-item {
             flex: 1;
             background: white;
-            border-radius: 10px;
-            padding: 15px 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 8px 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             border: 2px solid transparent;
             min-width: 0;
         }
@@ -483,7 +478,7 @@
         .top-three-item.rank-1 {
             border-color: #ffd700;
             order: 2;
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .top-three-item.rank-2 {
@@ -497,37 +492,25 @@
         }
 
         .rank-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-
-        .rank-1 .rank-icon {
-            color: #ffd700;
-        }
-
-        .rank-2 .rank-icon {
-            color: #c0c0c0;
-        }
-
-        .rank-3 .rank-icon {
-            color: #cd7f32;
+            font-size: 1.5rem;
+            margin-bottom: 3px;
         }
 
         .top-three-item .rank {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         .top-three-item .class-info {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             font-weight: bold;
             color: #8b0000;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         .top-three-item .score {
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #333;
         }
@@ -535,10 +518,58 @@
         .no-data {
             color: #666;
             font-style: italic;
-            padding: 20px;
+            padding: 10px;
+            font-size: 0.9rem;
         }
 
-        /* 排行榜 */
+        /* 表單區塊 - 壓縮間距 */
+        .submit-form p {
+            font-size: 0.9rem;
+            margin: 5px 0 3px;
+            flex-shrink: 0;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            text-align: left;
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 2px;
+            font-weight: bold;
+            color: #333;
+            font-size: 0.8rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .submit-form .button-container {
+            margin-top: 5px;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .submit-form .btn {
+            padding: 8px 12px;
+            font-size: 0.95rem;
+        }
+
+        /* ---------- 排行榜頁面（含清除按鈕） ---------- */
         .leaderboard {
             display: none;
             background-color: white;
@@ -548,6 +579,7 @@
             width: 100%;
             height: 100%;
             overflow-y: auto;
+            flex-direction: column;
         }
 
         .leaderboard h2 {
@@ -555,6 +587,7 @@
             margin-bottom: 15px;
             text-align: center;
             font-size: 1.8rem;
+            flex-shrink: 0;
         }
 
         .leaderboard-table {
@@ -582,23 +615,23 @@
             background-color: #fff8e1;
         }
 
-        .rank-1, .rank-2, .rank-3 {
-            font-weight: bold;
+        .rank-1 { color: #ffd700; font-weight: bold; }
+        .rank-2 { color: #c0c0c0; font-weight: bold; }
+        .rank-3 { color: #cd7f32; font-weight: bold; }
+
+        .leaderboard .button-container {
+            margin-top: 15px;
+            flex-shrink: 0;
         }
 
-        .rank-1 { color: #ffd700; }
-        .rank-2 { color: #c0c0c0; }
-        .rank-3 { color: #cd7f32; }
-
-        /* 頁腳 - 僅保留版權文字 */
-        footer {
-            text-align: center;
+        /* 清除排行榜按鈕（紅色警示） */
+        .btn-clear {
+            background-color: #cc0000;
             color: white;
-            padding: 5px 0;
-            margin-top: 5px;
-            font-size: 0.8rem;
-            opacity: 0.9;
-            flex-shrink: 0;
+            border: 2px solid #ffd700;
+        }
+        .btn-clear:hover {
+            background-color: #ff4444;
         }
 
         /* 横屏专用样式 */
@@ -606,84 +639,32 @@
             #orientation-message {
                 display: flex;
             }
-            
             .container {
                 display: none;
             }
         }
 
         @media screen and (orientation: landscape) and (max-height: 600px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .subtitle {
-                font-size: 0.8rem;
-                padding: 5px 10px;
-            }
-            
-            .language-selection {
-                width: 60vw;
-                height: 60vh;
-            }
-            
-            .language-selection h2 {
-                font-size: 1.2rem;
-            }
-            
-            .language-btn {
-                font-size: 1.2rem;
-            }
-            
-            .language-btn i {
-                font-size: 2rem;
-            }
-            
-            .riddle-text {
-                font-size: 1.5rem;
-            }
-            
-            .option-btn {
-                font-size: 1.1rem;
-                padding: 10px 5px;
-            }
-            
-            .stat-item .value {
-                font-size: 1.1rem;
-            }
-            
-            .top-three-list {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .top-three-item {
-                width: 80%;
-            }
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 0.8rem; padding: 5px 10px; }
+            .language-selection { width: 60vw; height: 60vh; }
+            .language-selection h2 { font-size: 1.2rem; }
+            .language-btn { font-size: 1.2rem; }
+            .language-btn i { font-size: 2rem; }
+            .btn-view-leaderboard { font-size: 1rem; padding: 8px 16px; }
+            .riddle-text { font-size: 1.5rem; }
+            .option-btn { font-size: 1.1rem; padding: 10px 5px; }
+            .stat-item .value { font-size: 1.1rem; }
+            .top-three-list { flex-direction: column; align-items: center; }
+            .top-three-item { width: 80%; }
         }
 
         @media screen and (min-width: 1200px) and (min-height: 700px) {
-            .container {
-                max-width: 1200px;
-                max-height: 800px;
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 3.5rem;
-            }
-            
-            .subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .game-container {
-                padding: 20px;
-            }
-            
-            .riddle-text {
-                font-size: 2.5rem;
-            }
+            .container { max-width: 1200px; max-height: 800px; padding: 20px; }
+            h1 { font-size: 3.5rem; }
+            .subtitle { font-size: 1.2rem; }
+            .game-container { padding: 20px; }
+            .riddle-text { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -703,7 +684,7 @@
 
         <!-- 游戏主容器 -->
         <main class="game-container" id="game-container">
-            <!-- 语言选择界面 -->
+            <!-- 语言选择界面 + 查看排行榜按鈕 -->
             <div class="language-selection" id="language-selection">
                 <h2>請選擇遊戲語言 / Please Select Game Language</h2>
                 <div class="language-options">
@@ -716,6 +697,10 @@
                         <span>English Riddles</span>
                     </div>
                 </div>
+                <!-- 新增查看排行榜按鈕 -->
+                <button class="btn-view-leaderboard" onclick="toggleLeaderboard()">
+                    <i class="fas fa-crown"></i> 查看排行榜
+                </button>
             </div>
 
             <!-- 游戏进行界面 -->
@@ -753,15 +738,15 @@
                 </div>
             </div>
 
-            <!-- 提交表单 -->
+            <!-- 提交表单（挑戰完成頁面，無滾動條，緊湊排版） -->
             <div class="submit-form" id="submit-form">
                 <h2><i class="fas fa-trophy"></i> 挑戰完成！</h2>
                 <div class="score-display" id="final-score">45 分</div>
                 
-                <!-- 排行榜前三名区域 -->
+                <!-- 排行榜前三名区域（已縮小） -->
                 <div class="top-three" id="top-three">
                     <h3>🏆 排行榜前三名 🏆</h3>
-                    <div class="loading" id="top-three-loading">
+                    <div class="loading" id="top-three-loading" style="display: none;">
                         <i class="fas fa-spinner fa-spin"></i>
                         <p>正在加載排行榜數據...</p>
                     </div>
@@ -797,7 +782,7 @@
             </div>
         </main>
 
-        <!-- 排行榜 -->
+        <!-- 排行榜頁面（含清除按鈕） -->
         <div class="leaderboard" id="leaderboard">
             <h2><i class="fas fa-crown"></i> 排行榜 Leaderboard</h2>
             <div class="loading" id="leaderboard-loading">
@@ -826,6 +811,10 @@
                 <button class="btn btn-secondary" onclick="toggleLeaderboard()">
                     <i class="fas fa-times"></i> 關閉排行榜
                 </button>
+                <!-- 新增清除排行榜按鈕 -->
+                <button class="btn btn-clear" onclick="promptClearLeaderboard()">
+                    <i class="fas fa-trash-alt"></i> 清除排行榜
+                </button>
             </div>
         </div>
 
@@ -835,16 +824,13 @@
             您的瀏覽器不支援視頻播放。
         </video>
 
-        <!-- 页脚 - 僅保留文字 -->
-        <footer>
-            <p style="margin-top: 5px;">元宵節猜燈謎 &copy; 2025</p>
-        </footer>
+        <!-- 頁腳已完全移除 (元宵節猜燈謎 © 2025 字樣已刪除) -->
     </div>
 
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue, query, orderByChild, limitToLast, remove } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCkopSXKNpvKAyhlxaAUot2xQRlZTsnBCQ",
@@ -867,6 +853,7 @@
         window.firebaseQuery = query;
         window.firebaseOrderByChild = orderByChild;
         window.firebaseLimitToLast = limitToLast;
+        window.firebaseRemove = remove;   // 用於清除排行榜
         
         console.log("Firebase 初始化完成");
     </script>
@@ -922,9 +909,7 @@
             showLanguageSelection();
             
             const bgImage = new Image();
-            bgImage.onload = function() {
-                console.log('背景圖片加載成功');
-            };
+            bgImage.onload = function() { console.log('背景圖片加載成功'); };
             bgImage.onerror = function() {
                 console.log('背景圖片加載失敗，使用默認背景');
                 document.body.style.backgroundImage = 'none';
@@ -943,9 +928,7 @@
             const classSelect = document.getElementById('class-select');
             const grades = ['1', '2', '3', '4', '5', '6'];
             const classes = ['A', 'B', 'C', 'D', 'E'];
-            
             classSelect.innerHTML = '<option value="">請選擇班別</option>';
-            
             grades.forEach(grade => {
                 classes.forEach(cls => {
                     const option = document.createElement('option');
@@ -965,20 +948,10 @@
 
         // 根据语言更新UI文本
         function updateUITextForLanguage(lang) {
-            const elements = {
-                'chinese': {
-                    'time-label': '用時',
-                    'multiplier-label': '分數倍率',
-                    'progress-label': '題目進度'
-                },
-                'english': {
-                    'time-label': 'Time Used',
-                    'multiplier-label': 'Score Multiplier',
-                    'progress-label': 'Progress'
-                }
-            };
-            
-            const texts = elements[lang];
+            const texts = {
+                'chinese': { 'time-label': '用時', 'multiplier-label': '分數倍率', 'progress-label': '題目進度' },
+                'english': { 'time-label': 'Time Used', 'multiplier-label': 'Score Multiplier', 'progress-label': 'Progress' }
+            }[lang];
             const statItems = document.querySelectorAll('.stat-item');
             statItems[0].querySelector('div:first-child').textContent = texts['time-label'];
             statItems[1].querySelector('div:first-child').textContent = texts['multiplier-label'];
@@ -988,14 +961,8 @@
         // 從JSON文件載入燈謎庫（不檢查localStorage）
         function loadRiddlesFromFile(lang) {
             const filename = lang === 'chinese' ? 'docx/chi.json' : 'docx/eng.json';
-            
             fetch(filename)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`無法加載 ${filename}`);
-                    }
-                    return response.json();
-                })
+                .then(response => { if (!response.ok) throw new Error(`無法加載 ${filename}`); return response.json(); })
                 .then(data => {
                     console.log(`已從文件加載 ${data.length} 個${lang==='chinese'?'中文':'英文'}燈謎`);
                     gameState.allRiddles = data;
@@ -1034,13 +1001,11 @@
                 alert('目前沒有可用的燈謎，請稍後再試。');
                 return;
             }
-
             document.getElementById('language-selection').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
             document.getElementById('submit-form').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'none';
             gameState.gameScreenActive = true;
-            
             resetGame();
             startGame();
         }
@@ -1052,26 +1017,20 @@
             gameState.timeUsed = 0;
             gameState.answered = false;
             gameState.gameCompleted = false;
-            
             updateTime();
             updateMultiplier();
             updateProgress();
-            
-            if (gameState.timer) {
-                clearInterval(gameState.timer);
-            }
+            if (gameState.timer) clearInterval(gameState.timer);
         }
 
         // 开始游戏
         function startGame() {
             gameState.startTime = Date.now();
-            
             gameState.timer = setInterval(() => {
                 gameState.timeUsed = Math.floor((Date.now() - gameState.startTime) / 1000);
                 updateTime();
                 updateMultiplier();
             }, 100);
-            
             displayCurrentRiddle();
         }
 
@@ -1079,76 +1038,51 @@
         function displayCurrentRiddle() {
             const riddle = gameState.riddles[gameState.currentRiddleIndex];
             const riddleText = document.getElementById('riddle-text');
-            
-            // 設置謎面文字
             riddleText.textContent = riddle.question;
             
-            // 根據語言設定 white-space 樣式
             const isEnglish = gameState.language === 'english';
             riddleText.style.whiteSpace = isEnglish ? 'pre' : 'normal';
             riddleText.style.wordBreak = isEnglish ? 'normal' : 'break-word';
             
             generateOptions(riddle);
             gameState.answered = false;
-            
             adjustRiddleFontSize();
         }
 
-        // 自適應謎面字體大小
+        // 自適應謎面字體大小（英文最小18px）
         function adjustRiddleFontSize() {
             const container = document.querySelector('.riddle-container');
             const riddleText = document.getElementById('riddle-text');
             if (!container || !riddleText) return;
-            
             const text = riddleText.textContent;
             if (!text) return;
-            
             const isEnglish = gameState.language === 'english';
-            
-            // 暫存目前的 white-space 以便測量
             const originalWhiteSpace = riddleText.style.whiteSpace;
-            
-            // 測量時強制使用正常換行模式，否則 scrollWidth 會無限大
-            if (isEnglish) {
-                riddleText.style.whiteSpace = 'pre'; // 保留換行，但 scrollWidth 會是完整寬度
-            }
+            if (isEnglish) riddleText.style.whiteSpace = 'pre';
             
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
-            
-            // 使用 canvas 測量文本寬度（包含換行時的最大行寬）
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             
-            // 設定字體下限與上限
-            let low = isEnglish ? 18 : 10;   // 英文最小24px
+            let low = isEnglish ? 18 : 10;   // 英文最小18px
             let high = 200;
             let fontSize = low;
             
-            // 二分法查找合適字體大小
             for (let i = 0; i < 10; i++) {
                 const mid = Math.floor((low + high) / 2);
                 context.font = `bold ${mid}px 'Noto Sans SC', sans-serif`;
-                
-                // 對於英文（white-space: pre），需要測量最寬一行的寬度
                 let maxWidth = 0;
                 if (isEnglish) {
                     const lines = text.split('\n');
-                    lines.forEach(line => {
-                        const w = context.measureText(line).width;
-                        if (w > maxWidth) maxWidth = w;
-                    });
+                    lines.forEach(line => { maxWidth = Math.max(maxWidth, context.measureText(line).width); });
                 } else {
                     maxWidth = context.measureText(text).width;
                 }
-                
                 riddleText.style.fontSize = mid + 'px';
                 const scrollHeight = riddleText.scrollHeight;
-                
-                // 中文：寬度高度皆須符合；英文：只檢查高度（寬度不檢查，因為不自動換行）
-                let widthOK = isEnglish ? true : (maxWidth < containerWidth * 0.95);
-                let heightOK = scrollHeight < containerHeight * 0.9;
-                
+                const widthOK = isEnglish ? true : (maxWidth < containerWidth * 0.95);
+                const heightOK = scrollHeight < containerHeight * 0.9;
                 if (widthOK && heightOK) {
                     fontSize = mid;
                     low = mid + 1;
@@ -1157,26 +1091,16 @@
                 }
             }
             
-            // 英文強制不小於24px
-            if (isEnglish && fontSize < 18) {
-                fontSize = 18;
-            }
-            
-            // 設定最終字體大小
+            if (isEnglish && fontSize < 18) fontSize = 18;
             riddleText.style.fontSize = fontSize + 'px';
             
-            // 若仍高度溢出，逐步縮小（但英文不會低於24px）
             let safeCount = 0;
             while (safeCount < 20) {
-                const overflowHeight = riddleText.scrollHeight > container.clientHeight;
-                if (!overflowHeight) break;
-                
+                if (riddleText.scrollHeight <= container.clientHeight) break;
                 fontSize = Math.max(isEnglish ? 18 : 8, fontSize - 2);
                 riddleText.style.fontSize = fontSize + 'px';
                 safeCount++;
             }
-            
-            // 恢復 white-space（其實已經在正確狀態）
             riddleText.style.whiteSpace = isEnglish ? 'pre' : 'normal';
         }
 
@@ -1184,10 +1108,8 @@
         function generateOptions(riddle) {
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
-            
             let options = [riddle.answer, ...riddle.distractors];
             options = shuffleArray(options);
-            
             options.forEach(option => {
                 const button = document.createElement('button');
                 button.className = 'option-btn';
@@ -1200,20 +1122,12 @@
         // 选择选项
         function selectOption(selected, button, correctAnswer) {
             if (gameState.answered) return;
-            
             if (selected === correctAnswer) {
                 gameState.answered = true;
                 gameState.correctAnswers++;
                 button.classList.add('correct');
-                
-                const buttons = document.querySelectorAll('.option-btn');
-                buttons.forEach(btn => {
-                    btn.classList.add('disabled');
-                });
-                
-                setTimeout(() => {
-                    nextRiddle();
-                }, 1000);
+                document.querySelectorAll('.option-btn').forEach(btn => btn.classList.add('disabled'));
+                setTimeout(() => nextRiddle(), 1000);
             } else {
                 button.classList.add('wrong');
                 button.classList.add('disabled');
@@ -1223,7 +1137,6 @@
         // 下一题
         function nextRiddle() {
             gameState.currentRiddleIndex++;
-            
             if (gameState.currentRiddleIndex < gameState.riddles.length) {
                 updateProgress();
                 displayCurrentRiddle();
@@ -1236,39 +1149,25 @@
         function endGame() {
             clearInterval(gameState.timer);
             gameState.gameCompleted = true;
-            
             const finalScore = calculateFinalScore();
             showVictoryVideo();
-            
-            setTimeout(() => {
-                showFinalScore(finalScore);
-            }, 3000);
+            setTimeout(() => showFinalScore(finalScore), 3000);
         }
 
         // 计算最终分数
         function calculateFinalScore() {
             const multiplier = Math.max(0, 30 - (gameState.timeUsed * 0.5));
             const score = Math.round(gameState.correctAnswers * 15 * multiplier);
-            
-            return {
-                score: score,
-                multiplier: multiplier,
-                timeUsed: gameState.timeUsed,
-                correctAnswers: gameState.correctAnswers
-            };
+            return { score, multiplier, timeUsed: gameState.timeUsed, correctAnswers: gameState.correctAnswers };
         }
 
         // 显示最终分数
         function showFinalScore(finalScore) {
-            const scoreText = gameState.language === 'chinese' 
-                ? `${finalScore.score} 分` 
-                : `${finalScore.score} points`;
+            const scoreText = gameState.language === 'chinese' ? `${finalScore.score} 分` : `${finalScore.score} points`;
             document.getElementById('final-score').textContent = scoreText;
-            
             displayTopThree();
-            
             document.getElementById('game-screen').style.display = 'none';
-            document.getElementById('submit-form').style.display = 'block';
+            document.getElementById('submit-form').style.display = 'flex';  // 改為flex以適應垂直排列
             gameState.gameScreenActive = false;
         }
 
@@ -1276,97 +1175,49 @@
         function showVictoryVideo() {
             const video = document.getElementById('victory-video');
             video.style.display = 'block';
-            video.play().catch(e => {
-                console.log('視頻播放失敗:', e);
-                video.style.display = 'none';
-            });
-            
-            setTimeout(() => {
-                video.style.display = 'none';
-                video.pause();
-                video.currentTime = 0;
-            }, 3000);
+            video.play().catch(e => console.log('視頻播放失敗:', e));
+            setTimeout(() => { video.style.display = 'none'; video.pause(); video.currentTime = 0; }, 3000);
         }
 
         // 显示排行榜前三名
         function displayTopThree() {
             const topThreeList = document.getElementById('top-three-list');
             const topThreeLoading = document.getElementById('top-three-loading');
-            
             topThreeList.innerHTML = '';
             topThreeLoading.style.display = 'block';
-            
             if (!leaderboardRef) {
                 topThreeLoading.style.display = 'none';
                 topThreeList.innerHTML = '<div class="no-data">Firebase 未正確初始化</div>';
                 return;
             }
-            
-            const topScoresQuery = window.firebaseQuery(
-                leaderboardRef, 
-                window.firebaseOrderByChild('score'), 
-                window.firebaseLimitToLast(3)
-            );
-            
+            const topScoresQuery = window.firebaseQuery(leaderboardRef, window.firebaseOrderByChild('score'), window.firebaseLimitToLast(3));
             window.firebaseOnValue(topScoresQuery, (snapshot) => {
                 topThreeLoading.style.display = 'none';
                 const data = snapshot.val();
-                
-                if (!data) {
-                    topThreeList.innerHTML = '<div class="no-data">暫無排行榜數據</div>';
-                    return;
-                }
-                
+                if (!data) { topThreeList.innerHTML = '<div class="no-data">暫無排行榜數據</div>'; return; }
                 const leaderboardArray = [];
-                for (const key in data) {
-                    leaderboardArray.push({
-                        id: key,
-                        ...data[key]
-                    });
-                }
-                
+                for (const key in data) leaderboardArray.push({ id: key, ...data[key] });
                 leaderboardArray.sort((a, b) => b.score - a.score);
                 const topThree = leaderboardArray.slice(0, 3);
-                
-                if (topThree.length === 0) {
-                    topThreeList.innerHTML = '<div class="no-data">暫無排行榜數據</div>';
-                    return;
-                }
-                
+                if (topThree.length === 0) { topThreeList.innerHTML = '<div class="no-data">暫無排行榜數據</div>'; return; }
                 const ranks = [
                     { class: 'rank-1', icon: '🥇', label: '第一名' },
                     { class: 'rank-2', icon: '🥈', label: '第二名' },
                     { class: 'rank-3', icon: '🥉', label: '第三名' }
                 ];
-                
                 topThree.forEach((entry, index) => {
                     const rank = ranks[index];
                     const item = document.createElement('div');
                     item.className = `top-three-item ${rank.class}`;
-                    
-                    item.innerHTML = `
-                        <div class="rank-icon">${rank.icon}</div>
-                        <div class="rank">${rank.label}</div>
-                        <div class="class-info">${entry.class} - ${entry.studentId}</div>
-                        <div class="score">${entry.score} 分</div>
-                    `;
-                    
+                    item.innerHTML = `<div class="rank-icon">${rank.icon}</div><div class="rank">${rank.label}</div><div class="class-info">${entry.class} - ${entry.studentId}</div><div class="score">${entry.score} 分</div>`;
                     topThreeList.appendChild(item);
                 });
-                
                 for (let i = topThree.length; i < 3; i++) {
                     const rank = ranks[i];
                     const item = document.createElement('div');
                     item.className = `top-three-item ${rank.class}`;
                     item.style.opacity = '0.5';
-                    
-                    item.innerHTML = `
-                        <div class="rank-icon">${rank.icon}</div>
-                        <div class="rank">${rank.label}</div>
-                        <div class="class-info">---</div>
-                        <div class="score">--- 分</div>
-                    `;
-                    
+                    item.innerHTML = `<div class="rank-icon">${rank.icon}</div><div class="rank">${rank.label}</div><div class="class-info">---</div><div class="score">--- 分</div>`;
                     topThreeList.appendChild(item);
                 }
             }, (error) => {
@@ -1380,48 +1231,27 @@
         function submitScore() {
             const classSelect = document.getElementById('class-select');
             const studentId = document.getElementById('student-id').value;
-            
             if (!classSelect.value || !studentId) {
-                alert(gameState.language === 'chinese' 
-                    ? '請選擇班別並輸入學號' 
-                    : 'Please select class and enter student ID');
+                alert(gameState.language === 'chinese' ? '請選擇班別並輸入學號' : 'Please select class and enter student ID');
                 return;
             }
-            
             const finalScore = calculateFinalScore();
             addToLeaderboard(classSelect.value, studentId, finalScore.score, finalScore.timeUsed, finalScore.multiplier);
-            
             document.getElementById('submit-form').style.display = 'none';
-            document.getElementById('leaderboard').style.display = 'block';
-            
+            document.getElementById('leaderboard').style.display = 'flex';
             classSelect.value = '';
             document.getElementById('student-id').value = '';
         }
 
         // 添加到排行榜
         function addToLeaderboard(className, studentId, score, time, multiplier) {
-            if (!leaderboardRef) {
-                alert('Firebase 未正確初始化，無法提交分數');
-                return;
-            }
-            
+            if (!leaderboardRef) { alert('Firebase 未正確初始化'); return; }
             const newScoreRef = window.firebasePush(leaderboardRef);
-            
             window.firebaseSet(newScoreRef, {
-                class: className,
-                studentId: studentId,
-                score: score,
-                time: time,
-                multiplier: multiplier,
-                timestamp: Date.now(),
-                language: gameState.language
-            }).then(() => {
-                console.log("分數已成功提交到 Firebase");
-                loadLeaderboard();
-            }).catch((error) => {
-                console.error("提交分數到 Firebase 失敗:", error);
-                alert('提交分數失敗，請稍後再試');
-            });
+                class: className, studentId, score, time, multiplier,
+                timestamp: Date.now(), language: gameState.language
+            }).then(() => { console.log("分數已提交"); loadLeaderboard(); })
+              .catch((error) => { console.error("提交失敗:", error); alert('提交分數失敗'); });
         }
 
         // 加载排行榜数据
@@ -1429,100 +1259,81 @@
             const leaderboardBody = document.getElementById('leaderboard-body');
             const leaderboardLoading = document.getElementById('leaderboard-loading');
             const leaderboardTable = document.getElementById('leaderboard-table');
-            
             leaderboardBody.innerHTML = '';
             leaderboardLoading.style.display = 'block';
             leaderboardTable.style.display = 'none';
-            
             if (!leaderboardRef) {
                 leaderboardLoading.style.display = 'none';
-                leaderboardBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="padding: 30px; text-align: center; color: #666; font-style: italic;">
-                            Firebase 未正確初始化
-                        </td>
-                    </tr>
-                `;
+                leaderboardBody.innerHTML = '<tr><td colspan="6" style="padding:30px;text-align:center;color:#666;">Firebase 未正確初始化</td></tr>';
                 leaderboardTable.style.display = 'table';
                 return;
             }
-            
-            const leaderboardQuery = window.firebaseQuery(
-                leaderboardRef, 
-                window.firebaseOrderByChild('score')
-            );
-            
+            const leaderboardQuery = window.firebaseQuery(leaderboardRef, window.firebaseOrderByChild('score'));
             window.firebaseOnValue(leaderboardQuery, (snapshot) => {
                 leaderboardLoading.style.display = 'none';
                 leaderboardTable.style.display = 'table';
-                
                 const data = snapshot.val();
-                
                 if (!data) {
-                    leaderboardBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" style="padding: 30px; text-align: center; color: #666; font-style: italic;">
-                                暫無排行榜數據
-                            </td>
-                        </tr>
-                    `;
+                    leaderboardBody.innerHTML = '<tr><td colspan="6" style="padding:30px;text-align:center;color:#666;">暫無排行榜數據</td></tr>';
                     return;
                 }
-                
                 const leaderboardArray = [];
-                for (const key in data) {
-                    leaderboardArray.push({
-                        id: key,
-                        ...data[key]
-                    });
-                }
-                
+                for (const key in data) leaderboardArray.push({ id: key, ...data[key] });
                 leaderboardArray.sort((a, b) => b.score - a.score);
                 const topScores = leaderboardArray.slice(0, 20);
-                
                 leaderboardBody.innerHTML = '';
-                
                 topScores.forEach((entry, index) => {
                     const row = document.createElement('tr');
-                    
                     if (index === 0) row.classList.add('rank-1');
                     else if (index === 1) row.classList.add('rank-2');
                     else if (index === 2) row.classList.add('rank-3');
-                    
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${entry.class}</td>
-                        <td>${entry.studentId}</td>
-                        <td>${entry.score}</td>
-                        <td>${entry.time}秒</td>
-                        <td>${entry.multiplier.toFixed(1)}</td>
-                    `;
-                    
+                    row.innerHTML = `<td>${index + 1}</td><td>${entry.class}</td><td>${entry.studentId}</td><td>${entry.score}</td><td>${entry.time}秒</td><td>${entry.multiplier.toFixed(1)}</td>`;
                     leaderboardBody.appendChild(row);
                 });
             }, (error) => {
                 leaderboardLoading.style.display = 'none';
                 leaderboardTable.style.display = 'table';
-                leaderboardBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="padding: 30px; text-align: center; color: #ff4444; font-style: italic;">
-                            加載失敗: ${error.message}
-                        </td>
-                    </tr>
-                `;
+                leaderboardBody.innerHTML = `<tr><td colspan="6" style="padding:30px;text-align:center;color:#ff4444;">加載失敗: ${error.message}</td></tr>`;
                 console.error("Firebase 讀取錯誤:", error);
             });
+        }
+
+        // ---------- 清除排行榜功能（密碼 hypldh）----------
+        function promptClearLeaderboard() {
+            const pwd = prompt('請輸入管理員密碼以清除排行榜：');
+            if (pwd === 'hypldh') {
+                if (confirm('確定要清除所有排行榜資料嗎？此操作無法復原。')) {
+                    clearLeaderboard();
+                }
+            } else {
+                alert('密碼錯誤，無權限清除排行榜。');
+            }
+        }
+
+        function clearLeaderboard() {
+            if (!leaderboardRef) {
+                alert('Firebase 未正確初始化');
+                return;
+            }
+            window.firebaseSet(leaderboardRef, null)
+                .then(() => {
+                    alert('排行榜已成功清除！');
+                    loadLeaderboard();  // 重新載入（顯示空白）
+                })
+                .catch((error) => {
+                    console.error('清除排行榜失敗:', error);
+                    alert('清除失敗，請稍後再試。');
+                });
         }
 
         // 切换排行榜显示
         function toggleLeaderboard() {
             const leaderboard = document.getElementById('leaderboard');
-            
-            if (leaderboard.style.display === 'block') {
+            if (leaderboard.style.display === 'flex' || leaderboard.style.display === 'block') {
                 leaderboard.style.display = 'none';
                 showLanguageSelection();
             } else {
-                leaderboard.style.display = 'block';
+                leaderboard.style.display = 'flex';
                 document.getElementById('language-selection').style.display = 'none';
                 document.getElementById('game-screen').style.display = 'none';
                 document.getElementById('submit-form').style.display = 'none';
@@ -1552,22 +1363,16 @@
         }
 
         // 更新用时显示
-        function updateTime() {
-            document.getElementById('time-used').textContent = gameState.timeUsed;
-        }
-
+        function updateTime() { document.getElementById('time-used').textContent = gameState.timeUsed; }
         // 更新倍率显示
         function updateMultiplier() {
             const multiplier = Math.max(0, 30 - (gameState.timeUsed * 0.5));
             document.getElementById('score-multiplier').textContent = multiplier.toFixed(1);
         }
-
         // 更新进度显示
         function updateProgress() {
-            document.getElementById('progress-text').textContent = 
-                `${gameState.currentRiddleIndex + 1}/${gameState.riddles.length}`;
+            document.getElementById('progress-text').textContent = `${gameState.currentRiddleIndex + 1}/${gameState.riddles.length}`;
         }
-
         // 工具函数：打乱数组顺序
         function shuffleArray(array) {
             const newArray = [...array];
